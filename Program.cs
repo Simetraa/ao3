@@ -10,23 +10,15 @@ namespace ao3
         {
             Console.WriteLine("Hello, World!");
 
-            var config = Configuration.Default.WithDefaultLoader();
-            var address = "https://archiveofourown.org/users/Killerfuzzel/profile";
-            var context = BrowsingContext.New(config);
-            var document = await context.OpenAsync(address);
+            //var work = await Work.ParseFromWorkAsync("50865955");
 
-            var joinDateSelector = "dl[class='meta'] > dd:nth-child(4)";
-            var joinDateString = document.QuerySelector(joinDateSelector).Text();
-            var joinDate = DateTime.ParseExact(joinDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture).Date;
+            //var authorsWorks = await (await Author.ParseAsync("Lunik")).GetWorks();
+            
+            //Console.WriteLine(authorsWorks);
 
-
-            var userIdSelector = "dl[class='meta'] > dd:nth-child(6)";
-            var userIdString = document.QuerySelector(userIdSelector).Text();
-
-            var work
-
-            Console.WriteLine(userIdString);
-            Console.WriteLine(joinDate.ToString());
+            var search = new WorkSearch(1000, 10000, 100, 1000, 10, 100, 10, 1000);
+            var query = search.GenerateSearchQuery();
+            Console.WriteLine(query);
         }
     }
 }

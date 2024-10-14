@@ -8,10 +8,8 @@ using AngleSharp.Html.Dom;
 
 namespace ao3
 {
-    class WorkMeta : HtmlElement
+    class WorkMeta
     {
-        public WorkMeta(Document owner, string localName, string? prefix = null, NodeFlags flags = NodeFlags.None) : base(owner, localName, prefix, flags)
-        {
-        }
+
     }
 }
