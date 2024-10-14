@@ -27,7 +27,7 @@ namespace ao3
         Only,
     }
 
-    enum SortBy
+    enum SortColumn
     {
         BestMatch,
         Author,
@@ -41,7 +41,7 @@ namespace ao3
         Bookmarks,
     }
 
-    enum SortOrder
+    enum SortDirection
     {
         Descending,
         Ascending,
@@ -58,30 +58,22 @@ namespace ao3
 
     public class WorkSearch
     {
-        public WorkSearch(string? query, string? title, string? creators, int? minHits, int? maxHits, int? minKudos, int? maxKudos, int? minComments, int? maxComments, int? minBookmarks, int? maxBookmarks)
+        public WorkSearch(string? query, string? title, string? creators, string? date, List<CompletionStatus> complete, List<Crossovers> crossovers, bool isSingleChapter, string wordCount, string language, string fandoms, List<Rating> ratings, List<string> characters, List<string> relationships, List<string> additionalTags, int? minHits, int? maxHits, int? minKudos, int? maxKudos, int? minComments, int? maxComments, int? minBookmarks, int? maxBookmarks, SortColumn sortBy, SortDirection sortOrder)
         {
-            //work_search[query]: 
-            //work_search[title]: 
-            //work_search[creators]: 
-            //work_search[revised_at]: 
-            //work_search[complete]: 
-            //work_search[crossover]: 
-            //work_search[single_chapter]: 0
-            //work_search[word_count]: 
-            //work_search[language_id]: 
-            //work_search[fandom_names]: 
-            //work_search[rating_ids]: 
-            //work_search[character_names]: 
-            //work_search[relationship_names]: 
-            //work_search[freeform_names]: 
-            //work_search[hits]: 
-            //work_search[kudos_count]: 
-            //work_search[comments_count]: 
-            //work_search[bookmarks_count]: 
-            //work_search[sort_column]: _score
-            //work_search[sort_direction]: desc
-
-
+            Query = query;
+            Title = title;
+            Creators = creators;
+            Date = date;
+            Complete = complete;
+            Crossovers = crossovers;
+            IsSingleChapter = isSingleChapter;
+            WordCount = wordCount;
+            Language = language;
+            Fandoms = fandoms;
+            Ratings = ratings;
+            Characters = characters;
+            Relationships = relationships;
+            AdditionalTags = additionalTags;
             MinHits = minHits;
             MaxHits = maxHits;
             MinKudos = minKudos;
@@ -90,6 +82,8 @@ namespace ao3
             MaxComments = maxComments;
             MinBookmarks = minBookmarks;
             MaxBookmarks = maxBookmarks;
+            SortBy = sortBy;
+            SortOrder = sortOrder;
         }
 
         // Parse a string containing a range into a min and max.
@@ -123,6 +117,29 @@ namespace ao3
             return new Tuple<int?, int?>(minValue, maxValue);
         }
 
+        // Parse a string containing a range into a min and max.
+        static string FormatRange(int? min, int? max)
+        {
+            // format an optional min and max into an ao3 spec range string
+
+            if (min == max)
+            {
+                return min.ToString();
+            }
+            else if (min == null)
+            {
+                return $"<{max}";
+            }
+            else if (max == null)
+            {
+                return $">{min}";
+            }
+            else
+            {
+                return $"{min}-{max}";
+            }
+        }
+
 
         public string GenerateSearchQuery()
         {
@@ -140,6 +157,21 @@ namespace ao3
 
         }
 
+
+        string? Query { get; set; }
+        string? Title { get; set; }
+        string? Creators { get; set; }
+        string? Date { get; set; }
+        List<CompletionStatus> Complete { get; set; }
+        List<Crossovers> Crossovers { get; set; }
+        bool IsSingleChapter { get; set; }
+        string WordCount { get; set; }
+        string Language { get; set; }
+        string Fandoms { get; set; }
+        List<Rating> Ratings { get; set; }
+        List<string> Characters { get; set; }
+        List<string> Relationships { get; set; }
+        List<string> AdditionalTags { get; set; }
         int? MinHits { get; set; }
         int? MaxHits { get; set; }
         int? MinKudos { get; set; }
@@ -148,6 +180,12 @@ namespace ao3
         int? MaxComments { get; set; }
         int? MinBookmarks { get; set; }
         int? MaxBookmarks { get; set; }
+        SortColumn SortBy { get; set; }
+        SortDirection SortOrder { get; set; }
+
+
+
+
     }
 
 

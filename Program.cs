@@ -16,7 +16,7 @@ namespace ao3
             
             //Console.WriteLine(authorsWorks);
 
-            var search = new WorkSearch(1000, 10000, 100, 1000, 10, 100, 10, 1000);
+            var search = new WorkSearch("", null, null, null, null, null, null, null, null, null, null);
             var query = search.GenerateSearchQuery();
             Console.WriteLine(query);
         }

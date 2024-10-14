@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -49,9 +50,9 @@ namespace ao3
         int Hits { get; }
 
 
-        public static async Task<Author> GetAuthor()
+        public async Task<Author> GetAuthor()
         {
-            return await Author.ParseAsync("f");
+            return await Author.ParseAsync(AuthorString);
         }
 
         public static Work ParseFromMeta(AngleSharp.Dom.IElement html)
@@ -102,7 +103,7 @@ namespace ao3
 
         }
 
-        public static async Task<Work> ParseFromWorkAsync(int id)
+        public static async Task<Work> ParseFromIdAsync(int id)
         {
             var config = Configuration.Default.WithDefaultLoader();
             var address = "https://archiveofourown.org/works/50865955/";
@@ -142,7 +143,7 @@ namespace ao3
 
 
             var hitsSelector = "dd.hits";
-            var hitsString = document.QuerySelector(wordsSelector).TextContent;
+            var hitsString = document.QuerySelector(hitsSelector).TextContent;
             var hits = Utils.ParseNumber(wordsString);
 
 
