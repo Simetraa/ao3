@@ -48,12 +48,12 @@ namespace ao3
         }
 
 
-        public async Task<(int pageCount, int workCount, IEnumerable<Work> works)> GetWorks(int page = 1)
+        public async Task<(int pageCount, int workCount, IEnumerable<WorkMeta> works)> GetWorks(int page = 1)
         {
             var search = new WorkSearch("", "", Name, "", CompletionStatus.All, Crossovers.Include, false, "", [],
                                         null, [], [], [], [], [], null, null, null, null, null, null, null, null, null,
                                         null, SortColumn.DatePosted, SortDirection.Descending);
-            (int pageCount, int workCount, IEnumerable<Work> works) = await search.Search(page);
+            (int pageCount, int workCount, IEnumerable<WorkMeta> works) = await search.Search(page);
 
 
             return (pageCount, workCount, works);

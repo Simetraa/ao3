@@ -219,7 +219,7 @@ namespace ao3
             return (pageCount, workCount);
         }
 
-        public async Task<(int pageCount, int workCount, IEnumerable<Work> works)> Search(int page = 1)
+        public async Task<(int pageCount, int workCount, IEnumerable<WorkMeta> works)> Search(int page = 1)
         {
             var config = Configuration.Default.WithDefaultLoader();
             var address = GenerateSearchQuery();
@@ -234,7 +234,7 @@ namespace ao3
 
             var (pageCount, workCount) = ParseWorkPageMeta(document);
 
-            IEnumerable<Work> works = workElements.Select(Work.ParseFromMeta);
+            IEnumerable<WorkMeta> works = workElements.Select(WorkMeta.ParseFromMeta);
 
             return (pageCount, workCount, works);
         }
