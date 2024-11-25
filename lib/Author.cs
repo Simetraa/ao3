@@ -10,19 +10,12 @@ using AngleSharp;
 
 namespace ao3.lib
 {
-    public class Author
+    public class Author(string name, string id, string dateJoined)
     {
-        public Author(string name, string id, string dateJoined)
-        {
-            Name = name;
-            Id = id;
-            DateJoined = dateJoined;
-        }
+        public string Name { get; } = name;
+        public string DateJoined { get; } = dateJoined;
 
-        public string Name { get; } // we do not have to declare a setter as user will not be setting these values
-        public string DateJoined { get; }
-
-        public string Id { get; }
+        public string Id { get; } = id;
 
 
         public static async Task<Author> ParseAsync(string name)

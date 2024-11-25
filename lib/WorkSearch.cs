@@ -1,87 +1,38 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Globalization;
-using System.Linq;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using AngleSharp;
-using System.Xml.Linq;
+﻿using AngleSharp;
 using AngleSharp.Dom;
 using Microsoft.AspNetCore.WebUtilities;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace ao3.lib
 {
-    public class WorkSearch
-    {
-        public WorkSearch(string query,
-                          string title,
-                          string creators,
-                          string date,
-                          CompletionStatus complete,
-                          Crossovers crossovers,
-                          bool onlySingleChapter,
-                          string language,
-                          List<string> fandoms,
-                          Rating? ratings,
-                          List<Warning> warnings,
-                          List<Category> categories,
-                          List<string> characters,
-                          List<string> relationships,
-                          List<string> additionalTags,
-                          int? minWords,
-                          int? maxWords,
-                          int? minHits,
-                          int? maxHits,
-                          int? minKudos,
-                          int? maxKudos,
-                          int? minComments,
-                          int? maxComments,
-                          int? minBookmarks,
-                          int? maxBookmarks,
-                          SortColumn sortBy,
-                          SortDirection sortOrder
+    public class WorkSearch(string query,
+                      string title,
+                      string creators,
+                      string date,
+                      CompletionStatus complete,
+                      Crossovers crossovers,
+                      bool onlySingleChapter,
+                      string language,
+                      List<string> fandoms,
+                      Rating? ratings,
+                      List<Warning> warnings,
+                      List<Category> categories,
+                      List<string> characters,
+                      List<string> relationships,
+                      List<string> additionalTags,
+                      int? minWords,
+                      int? maxWords,
+                      int? minHits,
+                      int? maxHits,
+                      int? minKudos,
+                      int? maxKudos,
+                      int? minComments,
+                      int? maxComments,
+                      int? minBookmarks,
+                      int? maxBookmarks,
+                      SortColumn sortBy,
+                      SortDirection sortOrder
             )
-        {
-            Query = query;
-            Title = title;
-            Creators = creators;
-            Date = date;
-            Complete = complete;
-            Crossovers = crossovers;
-            OnlySingleChapter = onlySingleChapter;
-            Language = language;
-            Fandoms = fandoms;
-            Rating = ratings;
-            Warnings = warnings;
-            Categories = categories;
-            Characters = characters;
-            Relationships = relationships;
-            AdditionalTags = additionalTags;
-            MinWords = minWords;
-            MaxWords = maxWords;
-            MinHits = minHits;
-            MaxHits = maxHits;
-            MinKudos = minKudos;
-            MaxKudos = maxKudos;
-            MinComments = minComments;
-            MaxComments = maxComments;
-            MinBookmarks = minBookmarks;
-            MaxBookmarks = maxBookmarks;
-            SortBy = sortBy;
-            SortOrder = sortOrder;
-        }
-
-
-
-
-
-
+    {
         public string GenerateSearchQuery()
         {
             string url = "https://archiveofourown.org/works/search";
@@ -182,28 +133,6 @@ namespace ao3.lib
                     break;
             }
 
-
-            //        commit: Search -
-            //work_search[query]: -
-            //work_search[title]:  - 
-            //work_search[creators]: s - 
-            //work_search[revised_at]:  - 
-            //work_search[complete]: - 
-            //work_search[crossover]: -
-            //work_search[single_chapter]: 0 - 
-            //work_search[word_count]: 
-            //work_search[language_id]: 
-            //work_search[fandom_names]: 
-            //work_search[rating_ids]: 
-            //work_search[character_names]: 
-            //work_search[relationship_names]: 
-            //work_search[freeform_names]: 
-            //work_search[hits]: 
-            //work_search[kudos_count]: 
-            //work_search[comments_count]: 
-            //work_search[bookmarks_count]: 
-            //work_search[sort_column]: _score
-
             return url;
         }
 
@@ -242,34 +171,34 @@ namespace ao3.lib
 
 
 
-        string Query { get; set; }
-        string Title { get; set; }
-        string? Creators { get; set; }
-        string Date { get; set; }
-        CompletionStatus Complete { get; set; }
-        Crossovers Crossovers { get; set; }
-        bool OnlySingleChapter { get; set; }
-        string Language { get; set; }
-        List<string> Fandoms { get; set; }
-        Rating? Rating { get; set; }
-        List<Warning> Warnings { get; set; }
-        List<Category> Categories { get; set; }
-        List<string> Characters { get; set; }
-        List<string> Relationships { get; set; }
-        List<string> AdditionalTags { get; set; }
+        string Query { get; set; } = query;
+        string Title { get; set; } = title;
+        string? Creators { get; set; } = creators;
+        string Date { get; set; } = date;
+        CompletionStatus Complete { get; set; } = complete;
+        Crossovers Crossovers { get; set; } = crossovers;
+        bool OnlySingleChapter { get; set; } = onlySingleChapter;
+        string Language { get; set; } = language;
+        List<string> Fandoms { get; set; } = fandoms;
+        Rating? Rating { get; set; } = ratings;
+        List<Warning> Warnings { get; set; } = warnings;
+        List<Category> Categories { get; set; } = categories;
+        List<string> Characters { get; set; } = characters;
+        List<string> Relationships { get; set; } = relationships;
+        List<string> AdditionalTags { get; set; } = additionalTags;
 
-        int? MinWords { get; set; }
-        int? MaxWords { get; set; }
-        int? MinHits { get; set; }
-        int? MaxHits { get; set; }
-        int? MinKudos { get; set; }
-        int? MaxKudos { get; set; }
-        int? MinComments { get; set; }
-        int? MaxComments { get; set; }
-        int? MinBookmarks { get; set; }
-        int? MaxBookmarks { get; set; }
-        SortColumn SortBy { get; set; }
-        SortDirection SortOrder { get; set; }
+        int? MinWords { get; set; } = minWords;
+        int? MaxWords { get; set; } = maxWords;
+        int? MinHits { get; set; } = minHits;
+        int? MaxHits { get; set; } = maxHits;
+        int? MinKudos { get; set; } = minKudos;
+        int? MaxKudos { get; set; } = maxKudos;
+        int? MinComments { get; set; } = minComments;
+        int? MaxComments { get; set; } = maxComments;
+        int? MinBookmarks { get; set; } = minBookmarks;
+        int? MaxBookmarks { get; set; } = maxBookmarks;
+        SortColumn SortBy { get; set; } = sortBy;
+        SortDirection SortOrder { get; set; } = sortOrder;
 
 
 

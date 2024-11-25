@@ -1,4 +1,5 @@
-﻿using AngleSharp;
+﻿using System.Net;
+using AngleSharp;
 
 namespace ao3.lib
 {
@@ -110,6 +111,16 @@ namespace ao3.lib
             return new Work(id, title, summary, author, language, chapters, totalChapters, words, kudos, bookmarks, hits,
                             completed, updated, published, rating, archiveWarning, category, fandoms, relationships,
                             characters, tags, text);
+        }
+
+        public async Task Download(DownloadType downloadType)
+        {
+            using var client = new HttpClient();
+            using var s = await client.GetStreamAsync($"https://download.archiveofourown.org/downloads/{Id}/fic.pdf");
+
+            // save to disc
+
+
         }
 
         public static async Task<Work> ParseFromIdAsync(int id)

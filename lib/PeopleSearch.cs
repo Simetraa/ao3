@@ -7,22 +7,15 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace ao3.lib
 {
-    public class PeopleSearch
+    public class PeopleSearch(string? query, List<string> names, List<string> fandoms)
     {
-        public PeopleSearch(string? query, List<string> names, List<string> fandoms)
-        {
-            Query = query;
-            Names = names;
-            Fandoms = fandoms;
-        }
-
-        string? Query { get; set; }
+        string? Query { get; set; } = query;
 
 
-        List<string> Names { get; set; }
+        List<string> Names { get; set; } = names;
 
 
-        List<string> Fandoms { get; set; }
+        List<string> Fandoms { get; set; } = fandoms;
 
         public string GenerateSearchQuery()
         {

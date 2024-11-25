@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace ao3.lib
 {
+    public enum DownloadType
+    {
+        AZW3,
+        EPUB,
+        MOBI,
+        PDF,
+        HTML,
+    }
     public enum CompletionStatus
     {
         All = 14,
