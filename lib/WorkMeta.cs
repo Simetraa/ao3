@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 
-namespace ao3
+namespace ao3.lib
 {
     public class WorkMeta(int id, string title, Rating rating, Warning archiveWarning, Category category, List<string> fandoms, List<string> relationships, List<string> characters, bool completed, string description, string authorString, List<string> freeformTags, string language, int words, int completedChapters, int? totalChapters, int kudos, int bookmarks, int hits)
     {
@@ -31,7 +31,7 @@ namespace ao3
         public int Bookmarks { get; } = bookmarks;
         public int Hits { get; } = hits;
 
-        public static WorkMeta ParseFromMeta(AngleSharp.Dom.IElement html)
+        public static WorkMeta ParseFromMeta(IElement html)
         {
             var idSelector = ".header .heading:first-child a:first-child";
             var idString = html.QuerySelector(idSelector)!.GetAttribute("href")!.Split("/").Last();

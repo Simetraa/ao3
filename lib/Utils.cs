@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AngleSharp.Dom;
 using Microsoft.Extensions.Primitives;
 
-namespace ao3
+namespace ao3.lib
 {
     public class Utils
     {
@@ -54,7 +54,7 @@ namespace ao3
 
         public static int? TryParseNullable(string val)
         {
-            return int.TryParse(val, out int outValue) ? (int?)outValue : null;
+            return int.TryParse(val, out int outValue) ? outValue : null;
         }
 
         public static DateOnly ParseDate(string date)

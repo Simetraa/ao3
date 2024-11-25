@@ -15,7 +15,7 @@ using AngleSharp.Dom;
 using Microsoft.AspNetCore.WebUtilities;
 using static System.Formats.Asn1.AsnWriter;
 
-namespace ao3
+namespace ao3.lib
 {
     public class WorkSearch
     {
@@ -77,7 +77,7 @@ namespace ao3
             SortOrder = sortOrder;
         }
 
-      
+
 
 
 
@@ -106,10 +106,11 @@ namespace ao3
                 url = QueryHelpers.AddQueryString(url, "work_search[category_ids][]", Convert.ToString((int)category));
             }
 
-            if(Rating.HasValue) // find a better way than this
+            if (Rating.HasValue) // find a better way than this
             {
                 url = QueryHelpers.AddQueryString(url, "work_search[rating_ids]", Convert.ToString((int)Rating));
-            } else
+            }
+            else
             {
                 url = QueryHelpers.AddQueryString(url, "work_search[rating_ids]", ""); // TODO: This is really messy.
 
@@ -167,7 +168,7 @@ namespace ao3
                     url = QueryHelpers.AddQueryString(url, "work_search[sort_direction]", "asc");
                     break;
             }
-            
+
             switch (Complete)
             {
                 case CompletionStatus.All:
@@ -206,7 +207,7 @@ namespace ao3
             return url;
         }
 
-        public static (int pageCount, int workCount) ParseWorkPageMeta(AngleSharp.Dom.IDocument document)
+        public static (int pageCount, int workCount) ParseWorkPageMeta(IDocument document)
         {
             var heading = document.QuerySelector("h3.heading")!.TextContent;
             var headingRegex = new System.Text.RegularExpressions.Regex("([\\d,]+) Found");
@@ -238,7 +239,7 @@ namespace ao3
 
             return (pageCount, workCount, works);
         }
-   
+
 
 
         string Query { get; set; }
@@ -276,5 +277,5 @@ namespace ao3
     }
 
 
-    
- }
+
+}

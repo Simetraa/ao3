@@ -3,7 +3,7 @@ using AngleSharp;
 using System.Xml.Linq;
 using System.Text;
 
-namespace ao3
+namespace ao3.lib
 {
     public class WorkList
     {

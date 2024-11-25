@@ -1,6 +1,6 @@
 ﻿using AngleSharp;
 
-namespace ao3
+namespace ao3.lib
 {
     public class Work(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed, DateOnly? updated, DateOnly published, Rating rating, Warning archiveWarning, Category category, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags, string? text) : WorkMeta(id, title, rating, archiveWarning, category, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
     {
@@ -15,7 +15,7 @@ namespace ao3
             return await Author.ParseAsync(AuthorString);
         }
 
-      
+
 
         public static Work ParseFromWork(AngleSharp.Dom.IDocument document)
         {

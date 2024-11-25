@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ao3
+namespace ao3.lib
 {
     public enum CompletionStatus
     {

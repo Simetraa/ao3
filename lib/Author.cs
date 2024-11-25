@@ -8,7 +8,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AngleSharp;
 
-namespace ao3
+namespace ao3.lib
 {
     public class Author
     {
@@ -58,4 +58,5 @@ namespace ao3
 
             return (pageCount, workCount, works);
         }
-}}
+    }
+}

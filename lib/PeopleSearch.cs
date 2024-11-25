@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace ao3
+namespace ao3.lib
 {
     public class PeopleSearch
     {

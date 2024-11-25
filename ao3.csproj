@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ao3Tests\**" />
+    <EmbeddedResource Remove="ao3Tests\**" />
+    <None Remove="ao3Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.10" />
   </ItemGroup>
