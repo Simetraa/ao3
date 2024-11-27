@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using AngleSharp;
+using AngleSharp.Text;
 
 namespace ao3.lib
 {
@@ -113,14 +114,36 @@ namespace ao3.lib
                             characters, tags, text);
         }
 
-        public async Task Download(DownloadType downloadType)
+        public async Task Download(DownloadType downloadType, string outputFormat)
         {
             using var client = new HttpClient();
-            using var s = await client.GetStreamAsync($"https://download.archiveofourown.org/downloads/{Id}/fic.pdf");
+            using var res = await client.GetAsync($"https://download.archiveofourown.org/downloads/{Id}/fic.pdf");
 
-            // save to disc
+             
+            var fileName = res.Content.Headers.ContentDisposition!.FileName!;
+            fileName = fileName[1..^1]; // remove quotation marks around filename
+
+            fileName = outputFormat.Replace("%title%", Title)
+                                                   .Replace("%author", AuthorString)
+                                   .Replace("%id%", Id.ToString())
+                                   .Replace("%format%", downloadType.ToString())
+                                   .Replace("%language%", Language)
+                                   .Replace("%words%", Words.ToString())
+                                   .Replace("%author%", AuthorString)
+                                   .Replace("%published%", Published.ToShortDateString());
+
+            foreach (var c in Path.GetInvalidFileNameChars())
+            {
+                fileName = fileName.Replace(c, '-');
+            }
 
 
+
+            Console.WriteLine("Downloading to", fileName);
+            using (var fs = new FileStream(fileName, FileMode.Create))
+            {
+                await res.Content.CopyToAsync(fs);
+            }
         }
 
         public static async Task<Work> ParseFromIdAsync(int id)
