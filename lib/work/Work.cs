@@ -1,10 +1,9 @@
-﻿using System.Net;
-using AngleSharp;
-using AngleSharp.Text;
+﻿using AngleSharp;
+using ao3.lib.author;
 
-namespace ao3.lib
+namespace ao3.lib.work
 {
-    public class Work(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed, DateOnly? updated, DateOnly published, Rating rating, Warning archiveWarning, Category category, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags, string? text) : WorkMeta(id, title, rating, archiveWarning, category, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
+    public class Work(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed, DateOnly? updated, DateOnly published, Rating rating, Warning archiveWarning, Category category, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags, string? text) : WorkBase(id, title, rating, archiveWarning, category, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
     {
         public DateOnly? Updated { get; } = updated;
 
@@ -114,37 +113,9 @@ namespace ao3.lib
                             characters, tags, text);
         }
 
-        public async Task Download(DownloadType downloadType, string outputFormat)
-        {
-            using var client = new HttpClient();
-            using var res = await client.GetAsync($"https://download.archiveofourown.org/downloads/{Id}/fic.pdf");
-
-             
-            var fileName = res.Content.Headers.ContentDisposition!.FileName!;
-            fileName = fileName[1..^1]; // remove quotation marks around filename
-
-            fileName = outputFormat.Replace("%title%", Title)
-                                                   .Replace("%author", AuthorString)
-                                   .Replace("%id%", Id.ToString())
-                                   .Replace("%format%", downloadType.ToString())
-                                   .Replace("%language%", Language)
-                                   .Replace("%words%", Words.ToString())
-                                   .Replace("%author%", AuthorString)
-                                   .Replace("%published%", Published.ToShortDateString());
-
-            foreach (var c in Path.GetInvalidFileNameChars())
-            {
-                fileName = fileName.Replace(c, '-');
-            }
 
 
 
-            Console.WriteLine("Downloading to", fileName);
-            using (var fs = new FileStream(fileName, FileMode.Create))
-            {
-                await res.Content.CopyToAsync(fs);
-            }
-        }
 
         public static async Task<Work> ParseFromIdAsync(int id)
         {

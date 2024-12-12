@@ -1,12 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ao3;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ao3.lib.search;
 
-namespace ao3Tests
+namespace ao3Tests.lib
 {
     [TestClass()]
     public class PeopleSearchTests

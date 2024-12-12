@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AngleSharp.Dom;
-using Microsoft.Extensions.Primitives;
+﻿using System.Globalization;
 
 namespace ao3.lib
 {
@@ -190,4 +183,6 @@ namespace ao3.lib
             }
         }
     }
+
 }
+

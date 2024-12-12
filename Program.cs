@@ -1,7 +1,6 @@
-﻿using AngleSharp.Dom;
-using AngleSharp;
-using System.CommandLine;
-using ao3.lib;
+﻿using System.CommandLine;
+using ao3.Commands;
+
 //using System.Globalization;
 
 namespace ao3
@@ -10,24 +9,19 @@ namespace ao3
     {
         static async Task Main(string[] args)
         {
-            //Console.WriteLine("Hello, World!");
+            args = ["search", "work", "--title", "Hi", "argument"];
 
-            var work = await Work.ParseFromIdAsync(50865955);
+            var rootCommand = new RootCommand();
 
-            await work.Download(DownloadType.PDF);
-            //var authorsWorks = await (await Author.ParseAsync("Lunik")).GetWorks();
+            // search command
+            var searchCommand = new Command("search", "Search AO3");
 
-            //Console.WriteLine(authorsWorks);
+            // Add the search work command
+            searchCommand.AddCommand(new SearchWorkCommand());
 
-            //var search = new WorkSearch("Dracula", "title", "creators", "4 weeks ago", CompletionStatus.Complete,Crossovers.Include, false, "en",new List<string> { "Dracula" }, Rating.TeenAndUpAudiences, new List<string> { "Harry Potter"}, new List<string> { "Harry Potter/Dracula"}, new List<string> { }, null, null, null, null, null, null, null, null, null, null, null, null, SortColumn.BestMatch, SortDirection.Descending);
-            //var query = search.GenerateSearchQuery();
+            rootCommand.AddCommand(searchCommand);
 
-            //var search = new PeopleSearch("", ["NiallWrites"], []);
-            //var query = search.GenerateSearchQuery();
-
-            //Console.WriteLine(query);
-
-
+            await rootCommand.InvokeAsync(args);
         }
 
     }

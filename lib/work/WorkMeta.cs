@@ -1,36 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AngleSharp.Dom;
-using AngleSharp.Html.Dom;
+﻿using AngleSharp.Dom;
 
-namespace ao3.lib
+namespace ao3.lib.work
 {
-    public class WorkMeta(int id, string title, Rating rating, Warning archiveWarning, Category category, List<string> fandoms, List<string> relationships, List<string> characters, bool completed, string description, string authorString, List<string> freeformTags, string language, int words, int completedChapters, int? totalChapters, int kudos, int bookmarks, int hits)
-    {
-        public int Id { get; } = id;
-        public string Title { get; } = title;
-        public Rating Rating { get; } = rating;
-        public Warning ArchiveWarning { get; } = archiveWarning;
-        public Category Category { get; } = category;
-        public List<string> Fandoms { get; } = fandoms;
-        public List<string> Relationships { get; } = relationships;
-        public List<string> Characters { get; } = characters;
-        public bool Completed { get; } = completed;
-        public string Description { get; } = description;
-        // can there be multiple authors on a fic?
-        public string AuthorString { get; } = authorString;
-        public List<string> FreeformTags { get; } = freeformTags;
-        public string Language { get; } = language;
-        public int Words { get; } = words;
-        public int CompletedChapters { get; } = completedChapters;
-        public int? TotalChapters { get; } = totalChapters;
-        public int Kudos { get; } = kudos;
-        public int Bookmarks { get; } = bookmarks;
-        public int Hits { get; } = hits;
 
+    public class WorkMeta(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed, Rating rating, Warning archiveWarning, Category category, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags) : WorkBase(id, title, rating, archiveWarning, category, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
+    {
         public static WorkMeta ParseFromMeta(IElement html)
         {
             var idSelector = ".header .heading:first-child a:first-child";
@@ -108,7 +82,27 @@ namespace ao3.lib
             var completedString = html.QuerySelector(completedSelector)!.TextContent;
             var completed = completedString == "Complete Work";
 
-            return new WorkMeta(id, title, rating, archiveWarning, category, fandoms, relationships, characters, completed, summary, author, freeformTags, language, words, chapters, totalChapters, kudos, bookmarks, hits);
+
+
+            return new WorkMeta(id,
+                                title,
+                                summary,
+                                author,
+                                language,
+                                chapters,
+                                totalChapters,
+                                words,
+                                kudos,
+                                bookmarks,
+                                hits,
+                                completed,
+                                rating,
+                                archiveWarning,
+                                category,
+                                fandoms,
+                                relationships,
+                                characters,
+                                freeformTags);
         }
         public async Task<Work> ToWork()
         {

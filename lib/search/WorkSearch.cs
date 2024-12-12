@@ -1,8 +1,9 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
+using ao3.lib.work;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace ao3.lib
+namespace ao3.lib.search
 {
     public class WorkSearch(string query,
                       string title,
@@ -13,7 +14,7 @@ namespace ao3.lib
                       bool onlySingleChapter,
                       string language,
                       List<string> fandoms,
-                      Rating? ratings,
+                      Rating? rating,
                       List<Warning> warnings,
                       List<Category> categories,
                       List<string> characters,
@@ -180,7 +181,7 @@ namespace ao3.lib
         bool OnlySingleChapter { get; set; } = onlySingleChapter;
         string Language { get; set; } = language;
         List<string> Fandoms { get; set; } = fandoms;
-        Rating? Rating { get; set; } = ratings;
+        Rating? Rating { get; set; } = rating;
         List<Warning> Warnings { get; set; } = warnings;
         List<Category> Categories { get; set; } = categories;
         List<string> Characters { get; set; } = characters;

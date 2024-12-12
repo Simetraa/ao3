@@ -1,9 +1,4 @@
-﻿using System;
-using AngleSharp;
-using System.Xml.Linq;
-using System.Text;
-
-namespace ao3.lib
+﻿namespace ao3.lib
 {
     public class WorkList
     {

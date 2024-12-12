@@ -1,14 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AngleSharp.Dom;
+﻿using AngleSharp.Dom;
 using AngleSharp;
 using ao3.lib;
+using ao3.lib.work;
 
-namespace ao3Tests
+namespace ao3Tests.lib
 {
     [TestClass()]
     public class WorkMetaTests
@@ -21,7 +16,7 @@ namespace ao3Tests
 
             IElement workElement = document.QuerySelector("li.work")!;
 
-            var work = Work.ParseFromMeta(workElement);
+            var work = WorkMeta.ParseFromMeta(workElement);
             Assert.AreEqual("NiallWrites", work.AuthorString);
             //Assert.AreEqual(new DateOnly(2021, 6, 29), work.Updated);
             //Assert.AreEqual(null, work.Published);
@@ -48,6 +43,12 @@ namespace ao3Tests
             Assert.AreEqual(Warning.NoArchiveWarningsApply, work.ArchiveWarning);
             Assert.AreEqual(Category.FM, work.Category);
             Assert.AreEqual(true, work.Completed);
+
+            var work2 = await work.ToWork();
+            Assert.AreEqual("NiallWrites", work2.AuthorString);
+
+            var fileName = await work2.Download(DownloadType.PDF, "%id%-%author%-%title%-%language%-%words%.%ext%");
+            Assert.AreEqual("32265931-NiallWrites-After School-English-466.pdf", fileName);
         }
     }
 }

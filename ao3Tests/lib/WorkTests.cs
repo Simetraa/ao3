@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AngleSharp.Dom;
+﻿using AngleSharp.Dom;
 using AngleSharp;
 using ao3.lib;
+using ao3.lib.work;
 
-namespace ao3Tests
+namespace ao3Tests.lib
 {
     [TestClass()]
     public class WorkTests

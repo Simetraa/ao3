@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using AngleSharp;
+﻿using AngleSharp;
+using ao3.lib.search;
+using ao3.lib.work;
+using Spectre.Console;
 
-namespace ao3.lib
+namespace ao3.lib.author
 {
-    public class Author(string name, string id, string dateJoined)
+    public class Author(string id, string name, string dateJoined, string? location, DateOnly? birthday, string[] pseuds, string? bio, string avatarUrl) : AuthorBase(name)
     {
-        public string Name { get; } = name;
+        public string Id { get; } = id;
+        public string AvatarUrl { get; } = avatarUrl;
         public string DateJoined { get; } = dateJoined;
 
-        public string Id { get; } = id;
+        public string? Location { get; } = location;
+        public DateOnly? Birthday { get; } = birthday;
+
+        public string[] Pseuds { get; } = pseuds;
+
+        public string? Bio { get; } = bio;
 
 
         public static async Task<Author> ParseAsync(string name)
@@ -37,9 +38,23 @@ namespace ao3.lib
             var idSelector = "dl[class='meta'] > dd:nth-of-type(3)";
             var id = document.QuerySelector(idSelector)!.TextContent;
 
-            return new Author(name, id, dateJoined);
-        }
+            var pseudsSelector = ".pseud ul li a";
+            var pseuds = document.QuerySelectorAll(pseudsSelector).Select(i => i.TextContent).ToArray();
 
+            var locationSelector = "dt.location + dd";
+            var location = document.QuerySelector(locationSelector)?.TextContent;
+
+            var birthdaySelector = "dt.birthday + dd";
+            var birthdayText = document.QuerySelector(birthdaySelector)?.TextContent;
+            DateOnly? birthday = birthdayText == null ? null : Utils.ParseDate(birthdayText);
+
+
+            var bioSelector = ".bio .userstuff";
+            var bio = document.QuerySelector(bioSelector)?.TextContent ?? null;
+
+
+            return new Author(id, name, dateJoined, location, birthday, pseuds, bio, "");
+        }
 
         public async Task<(int pageCount, int workCount, IEnumerable<WorkMeta> works)> GetWorks(int page = 1)
         {

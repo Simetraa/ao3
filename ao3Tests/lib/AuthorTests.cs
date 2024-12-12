@@ -1,6 +1,7 @@
-﻿using ao3.lib;
+﻿using ao3.lib.author;
+using ao3.lib.work;
 
-namespace ao3Tests
+namespace ao3Tests.lib
 {
     [TestClass()]
     public class AuthorTests
@@ -24,8 +25,6 @@ namespace ao3Tests
             Assert.AreEqual("21504565", author.Id);
             Assert.AreEqual("queenoffeysand", author.Name);
             Assert.AreEqual("2024-05-15", author.DateJoined);
-
         }
-
     }
 }
