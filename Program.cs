@@ -1,5 +1,7 @@
 ﻿using System.CommandLine;
 using ao3.Commands;
+using ao3.lib.search;
+using ao3.lib;
 
 //using System.Globalization;
 
@@ -9,7 +11,7 @@ namespace ao3
     {
         static async Task Main(string[] args)
         {
-            args = ["search", "work", "--title", "Hi", "argument"];
+            args = ["search", "work", "--title", "Pureblood pretense", "--author", "murkybluematter"];
 
             var rootCommand = new RootCommand();
 
@@ -22,6 +24,10 @@ namespace ao3
             rootCommand.AddCommand(searchCommand);
 
             await rootCommand.InvokeAsync(args);
+
+
+
+
         }
 
     }

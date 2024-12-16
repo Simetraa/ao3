@@ -3,7 +3,7 @@ using ao3.lib.author;
 
 namespace ao3.lib.work
 {
-    public class Work(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed, DateOnly? updated, DateOnly published, Rating rating, Warning archiveWarning, Category category, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags, string? text) : WorkBase(id, title, rating, archiveWarning, category, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
+    public class Work(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed, DateOnly? updated, DateOnly published, Rating rating, IEnumerable<Warning> archiveWarnings, IEnumerable<Category> categories, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags, string? text) : WorkBase(id, title, rating, archiveWarnings, categories, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
     {
         public DateOnly? Updated { get; } = updated;
 
@@ -66,7 +66,7 @@ namespace ao3.lib.work
             var hitsString = document.QuerySelector(hitsSelector)!.TextContent;
             var hits = Utils.ParseNumber(hitsString);
 
-            var bookmarksSelector = "dd.hits";
+            var bookmarksSelector = "dd.bookmarks";
             var bookmarksString = document.QuerySelector(bookmarksSelector)!.TextContent;
             var bookmarks = Utils.ParseNumber(bookmarksString);
 
@@ -83,13 +83,13 @@ namespace ao3.lib.work
             var ratingString = document.QuerySelector(ratingSelector)!.TextContent;
             var rating = Utils.RatingDict[ratingString];
 
-            var archiveWarningSelector = ".warning .tag";
-            var archiveWarningString = document.QuerySelector(archiveWarningSelector)!.TextContent;
-            var archiveWarning = Utils.WarningDict[archiveWarningString];
+            var archiveWarningsSelector = ".warning .tag";
+            var archiveWarningsString = document.QuerySelector(archiveWarningsSelector)!.TextContent;
+            var archiveWarnings = archiveWarningsString.Split(", ").Select(t => Utils.WarningDict[t]).ToList();
 
-            var categorySelector = ".category .tag";
-            var categoryString = document.QuerySelector(categorySelector)!.TextContent;
-            var category = Utils.CategoryDict[categoryString];
+            var categoriesSelector = ".category .tag";
+            var categoriesString = document.QuerySelector(categoriesSelector)!.TextContent;
+            var categories = categoriesString.Split(", ").Select(t => Utils.CategoryDict[t]).ToList();
 
             var fandomsSelector = ".fandom .tag";
             var fandoms = document.QuerySelectorAll(fandomsSelector).Select(t => t.TextContent).ToList();
@@ -106,10 +106,8 @@ namespace ao3.lib.work
             var textSelector = "#chapters";
             var text = document.QuerySelector(textSelector)!.TextContent;
 
-
-
             return new Work(id, title, summary, author, language, chapters, totalChapters, words, kudos, bookmarks, hits,
-                            completed, updated, published, rating, archiveWarning, category, fandoms, relationships,
+                            completed, updated, published, rating, archiveWarnings, categories, fandoms, relationships,
                             characters, tags, text);
         }
 

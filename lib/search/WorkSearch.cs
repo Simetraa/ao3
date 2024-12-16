@@ -6,47 +6,74 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace ao3.lib.search
 {
     public class WorkSearch(string query,
-                      string title,
-                      string creators,
-                      string date,
-                      CompletionStatus complete,
-                      Crossovers crossovers,
-                      bool onlySingleChapter,
-                      string language,
-                      List<string> fandoms,
-                      Rating? rating,
-                      List<Warning> warnings,
-                      List<Category> categories,
-                      List<string> characters,
-                      List<string> relationships,
-                      List<string> additionalTags,
-                      int? minWords,
-                      int? maxWords,
-                      int? minHits,
-                      int? maxHits,
-                      int? minKudos,
-                      int? maxKudos,
-                      int? minComments,
-                      int? maxComments,
-                      int? minBookmarks,
-                      int? maxBookmarks,
-                      SortColumn sortBy,
-                      SortDirection sortOrder
+                      string title = "",
+                      string creators = "",
+                      string date = "",
+                      CompletionStatus complete = CompletionStatus.All,
+                      Crossovers crossovers = Crossovers.Include,
+                      bool onlySingleChapter = false,
+                      string language = "",
+                      IEnumerable<string>? fandoms = null,
+                      Rating? rating = null,
+                      IEnumerable<Warning>? warnings = null,
+                      IEnumerable<Category>? categories = null,
+                      IEnumerable<string>? characters = null,
+                      IEnumerable<string>? relationships = null,
+                      IEnumerable<string>? additionalTags = null,
+                      int? minWords = null,
+                      int? maxWords = null,
+                      int? minHits = null,
+                      int? maxHits = null,
+                      int? minKudos = null,
+                      int? maxKudos = null,
+                      int? minComments = null,
+                      int? maxComments = null,
+                      int? minBookmarks = null,
+                      int? maxBookmarks = null,
+                      SortColumn sortBy = SortColumn.BestMatch,
+                      SortDirection sortOrder = SortDirection.Descending
             )
     {
         public string GenerateSearchQuery()
         {
             string url = "https://archiveofourown.org/works/search";
-
-            url = QueryHelpers.AddQueryString(url, "work_search[query]", Query ?? "");
-            url = QueryHelpers.AddQueryString(url, "work_search[title]]", Title);
+             
+            url = QueryHelpers.AddQueryString(url, "work_search[query]", Query);
+            url = QueryHelpers.AddQueryString(url, "work_search[title]", Title);
             url = QueryHelpers.AddQueryString(url, "work_search[creators]", Creators);
-            url = QueryHelpers.AddQueryString(url, "work_search[revised_at]]", Date);
-            url = QueryHelpers.AddQueryString(url, "work_search[complete]]", Convert.ToString((int)Complete));
-            url = QueryHelpers.AddQueryString(url, "work_search[crossover]]", Convert.ToString((int)Crossovers));
-            url = QueryHelpers.AddQueryString(url, "work_search[single_chapter]]", OnlySingleChapter ? "T" : "F");
-            url = QueryHelpers.AddQueryString(url, "work_search[language_id]]", Language);
+            url = QueryHelpers.AddQueryString(url, "work_search[revised_at]", Date);
+
+            switch (Complete)
+            {
+                case CompletionStatus.All:
+                    url = QueryHelpers.AddQueryString(url, "work_search[complete]", "");
+                    break; // we may be able to remove this
+                case CompletionStatus.Complete:
+                    url = QueryHelpers.AddQueryString(url, "work_search[complete]", "T");
+                    break;
+                case CompletionStatus.InProgress:
+                    url = QueryHelpers.AddQueryString(url, "work_search[complete]", "F");
+                    break;
+            }
+
+            switch (Crossovers)
+            {
+                case Crossovers.Include:
+                    url = QueryHelpers.AddQueryString(url, "work_search[crossover]", "");
+                    break;
+                case Crossovers.Exclude:
+                    url = QueryHelpers.AddQueryString(url, "work_search[crossover]", "F");
+                    break;
+                case Crossovers.Only:
+                    url = QueryHelpers.AddQueryString(url, "work_search[crossover]", "T");
+                    break;
+            }
+
+            url = QueryHelpers.AddQueryString(url, "work_search[single_chapter]", OnlySingleChapter ? "1" : "0");
+            url = QueryHelpers.AddQueryString(url, "work_search[word_count]", Utils.FormatRange(MinWords, MaxWords));
+            url = QueryHelpers.AddQueryString(url, "work_search[language_id]", Language);
             url = QueryHelpers.AddQueryString(url, "work_search[fandom_names]", string.Join(",", Fandoms));
+
             foreach (var warning in Warnings)
             {
                 url = QueryHelpers.AddQueryString(url, "work_search[archive_warning_ids][]", Convert.ToString((int)warning));
@@ -57,6 +84,7 @@ namespace ao3.lib.search
             {
                 url = QueryHelpers.AddQueryString(url, "work_search[category_ids][]", Convert.ToString((int)category));
             }
+
 
             if (Rating.HasValue) // find a better way than this
             {
@@ -71,7 +99,6 @@ namespace ao3.lib.search
             url = QueryHelpers.AddQueryString(url, "work_search[character_names]", string.Join(",", Characters));
             url = QueryHelpers.AddQueryString(url, "work_search[relationship_names]", string.Join(",", Relationships));
             url = QueryHelpers.AddQueryString(url, "work_search[freeform_names]", string.Join(",", AdditionalTags));
-            url = QueryHelpers.AddQueryString(url, "work_search[word_count]", Utils.FormatRange(MinWords, MaxWords));
             url = QueryHelpers.AddQueryString(url, "work_search[hits]", Utils.FormatRange(MinHits, MaxHits));
             url = QueryHelpers.AddQueryString(url, "work_search[kudos_count]", Utils.FormatRange(MinKudos, MaxKudos));
             url = QueryHelpers.AddQueryString(url, "work_search[comments_count]", Utils.FormatRange(MinComments, MaxComments));
@@ -121,31 +148,22 @@ namespace ao3.lib.search
                     break;
             }
 
-            switch (Complete)
-            {
-                case CompletionStatus.All:
-                    url = QueryHelpers.AddQueryString(url, "work_search[complete]", "");
-                    break; // we may be able to remove this
-                case CompletionStatus.Complete:
-                    url = QueryHelpers.AddQueryString(url, "work_search[complete]", "T");
-                    break;
-                case CompletionStatus.InProgress:
-                    url = QueryHelpers.AddQueryString(url, "work_search[complete]", "F");
-                    break;
-            }
+
 
             return url;
         }
 
         public static (int pageCount, int workCount) ParseWorkPageMeta(IDocument document)
         {
-            var heading = document.QuerySelector("h3.heading")!.TextContent;
-            var headingRegex = new System.Text.RegularExpressions.Regex("([\\d,]+) Found");
+            var heading = document.QuerySelector("h3.heading:has(>a[title='Work search results help']")!.TextContent;
+            var headingRegex = new System.Text.RegularExpressions.Regex("([\\d,]+) Found  ?"); // TODO: Make this more robust
             var match = headingRegex.Match(heading);
-            var workCount = int.Parse(match.Groups[1].Value);
+            var workCountString = match.Groups[1].Value;
+            var workCount = Utils.ParseNumber(workCountString);
 
-            var pageCountEl = document.QuerySelector(".pagination li:has(+ .next) > a")!.TextContent;
-            var pageCount = int.Parse(pageCountEl);
+            var pageCountString = document.QuerySelector(".pagination li:has(+ .next) > a")?.TextContent ?? "1";
+
+            var pageCount = Utils.ParseNumber(pageCountString);
 
             return (pageCount, workCount);
         }
@@ -153,7 +171,7 @@ namespace ao3.lib.search
         public async Task<(int pageCount, int workCount, IEnumerable<WorkMeta> works)> Search(int page = 1)
         {
             var config = Configuration.Default.WithDefaultLoader();
-            var address = GenerateSearchQuery();
+            var address = this.GenerateSearchQuery();
             var context = BrowsingContext.New(config);
 
             address = QueryHelpers.AddQueryString(address, "page", page.ToString());
@@ -170,24 +188,21 @@ namespace ao3.lib.search
             return (pageCount, workCount, works);
         }
 
-
-
         string Query { get; set; } = query;
-        string Title { get; set; } = title;
-        string? Creators { get; set; } = creators;
-        string Date { get; set; } = date;
+        string Title { get; set; } = title ?? "";
+        string Creators { get; set; } = creators ?? "";
+        string Date { get; set; } = date ?? "";
         CompletionStatus Complete { get; set; } = complete;
         Crossovers Crossovers { get; set; } = crossovers;
         bool OnlySingleChapter { get; set; } = onlySingleChapter;
-        string Language { get; set; } = language;
-        List<string> Fandoms { get; set; } = fandoms;
+        string Language { get; set; } = language ?? "";
+        IEnumerable<string> Fandoms { get; set; } = fandoms ?? [];
         Rating? Rating { get; set; } = rating;
-        List<Warning> Warnings { get; set; } = warnings;
-        List<Category> Categories { get; set; } = categories;
-        List<string> Characters { get; set; } = characters;
-        List<string> Relationships { get; set; } = relationships;
-        List<string> AdditionalTags { get; set; } = additionalTags;
-
+        IEnumerable<Warning> Warnings { get; set; } = warnings ?? [];
+        IEnumerable<Category> Categories { get; set; } = categories ?? [];
+        IEnumerable<string> Characters { get; set; } = characters ?? [];
+        IEnumerable<string> Relationships { get; set; } = relationships ;
+        IEnumerable<string> AdditionalTags { get; set; } = additionalTags ?? [];
         int? MinWords { get; set; } = minWords;
         int? MaxWords { get; set; } = maxWords;
         int? MinHits { get; set; } = minHits;
@@ -200,12 +215,5 @@ namespace ao3.lib.search
         int? MaxBookmarks { get; set; } = maxBookmarks;
         SortColumn SortBy { get; set; } = sortBy;
         SortDirection SortOrder { get; set; } = sortOrder;
-
-
-
-
     }
-
-
-
 }

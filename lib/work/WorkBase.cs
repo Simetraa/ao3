@@ -1,14 +1,14 @@
 ﻿namespace ao3.lib.work
 {
-    public abstract class WorkBase(int id, string title, Rating rating, Warning archiveWarning, Category category, List<string> fandoms, List<string> relationships, List<string> characters, bool completed, string description, string authorString, List<string> freeformTags, string language, int words, int completedChapters, int? totalChapters, int kudos, int bookmarks, int hits)
+    public abstract class WorkBase(int id, string title, Rating rating, IEnumerable<Warning> archiveWarnings, IEnumerable<Category> categories, List<string> fandoms, List<string> relationships, List<string> characters, bool completed, string description, string authorString, List<string> freeformTags, string language, int words, int completedChapters, int? totalChapters, int kudos, int bookmarks, int hits)
     {
 
 
         public int Id { get; } = id;
         public string Title { get; } = title;
         public Rating Rating { get; } = rating;
-        public Warning ArchiveWarning { get; } = archiveWarning;
-        public Category Category { get; } = category;
+        public IEnumerable<Warning> ArchiveWarnings { get; } = archiveWarnings;
+        public IEnumerable<Category> Categories { get; } = categories;
         public List<string> Fandoms { get; } = fandoms;
         public List<string> Relationships { get; } = relationships;
         public List<string> Characters { get; } = characters;

@@ -10,7 +10,7 @@
     }
     public enum CompletionStatus
     {
-        All = 14,
+        All,
         Complete,
         InProgress,
     }
@@ -44,6 +44,7 @@
 
     public enum Rating
     {
+        All = 0,
         NotRated = 9,
         GeneralAudiences = 10,
         TeenAndUpAudiences = 11,

@@ -1,5 +1,6 @@
 using System.CommandLine;
 using ao3.lib;
+using ao3.lib.search;
 
 namespace ao3.Commands
 {
@@ -98,15 +99,88 @@ namespace ao3.Commands
 
             this.AddArgument(searchWorkQuery);
             this.AddOption(searchWorkTitleOption);
-            
-            // include arguments and options
-            this.SetHandler((query, title))
+            this.AddOption(searchWorkAuthorOption);
+            this.AddOption(searchWorkDateOption);
+            this.AddOption(searchWorkCompleteOption);
+            this.AddOption(searchWorkCrossoversOption);
+            this.AddOption(searchWorkSingleChapterOption);
+            this.AddOption(searchWorkLanguageOption);
+            this.AddOption(searchWorkFandomsOption);
+            this.AddOption(searchWorkRatingsOption);
+            this.AddOption(searchWorkWarningsOption);
+            this.AddOption(searchWorkCategoriesOption);
+            this.AddOption(searchWorkCharactersOption);
+            this.AddOption(searchWorkRelationshipsOption);
+            this.AddOption(searchWorkAdditionalTagsOption);
+            this.AddOption(searchWorkMinWordsOption);
+            this.AddOption(searchWorkMaxWordsOption);
+            this.AddOption(searchWorkMinHitsOption);
+            this.AddOption(searchWorkMaxHitsOption);
+            this.AddOption(searchWorkMinKudosOption);
+            this.AddOption(searchWorkMaxKudosOption);
+            this.AddOption(searchWorkMinCommentsOption);
+            this.AddOption(searchWorkMaxCommentsOption);
+            this.AddOption(searchWorkMinBookmarksOption);
+            this.AddOption(searchWorkMaxBookmarksOption);
+            this.AddOption(searchWorkSortByOption);
+            this.AddOption(searchWorkSortOrderOption);
 
-            //// Handler using query and option
-            //this.SetHandler((string query, string title) =>
-            //{
-            //    Console.WriteLine($"test {query} {title}");
-            //}, searchWorkQuery, searchWorkTitleOption);
-        }
+
+
+
+            // include arguments and options
+
+            this.SetHandler(async (context) =>
+            {
+                var query = context.ParseResult.GetValueForArgument(searchWorkQuery);
+                var title = context.ParseResult.GetValueForOption(searchWorkTitleOption);
+                var author = context.ParseResult.GetValueForOption(searchWorkAuthorOption);
+                var date = context.ParseResult.GetValueForOption(searchWorkDateOption);
+                var complete = context.ParseResult.GetValueForOption(searchWorkCompleteOption);
+                var crossovers = context.ParseResult.GetValueForOption(searchWorkCrossoversOption);
+                var singleChapter = context.ParseResult.GetValueForOption(searchWorkSingleChapterOption);
+                var language = context.ParseResult.GetValueForOption(searchWorkLanguageOption);
+                var fandoms = context.ParseResult.GetValueForOption(searchWorkFandomsOption);
+                var ratings = context.ParseResult.GetValueForOption(searchWorkRatingsOption);
+                var warnings = context.ParseResult.GetValueForOption(searchWorkWarningsOption);
+                var categories = context.ParseResult.GetValueForOption(searchWorkCategoriesOption);
+                var characters = context.ParseResult.GetValueForOption(searchWorkCharactersOption);
+                var relationships = context.ParseResult.GetValueForOption(searchWorkRelationshipsOption);
+                var additionalTags = context.ParseResult.GetValueForOption(searchWorkAdditionalTagsOption);
+                var minWords = context.ParseResult.GetValueForOption(searchWorkMinWordsOption);
+                var maxWords = context.ParseResult.GetValueForOption(searchWorkMaxWordsOption);
+                var minHits = context.ParseResult.GetValueForOption(searchWorkMinHitsOption);
+                var maxHits = context.ParseResult.GetValueForOption(searchWorkMaxHitsOption);
+                var minKudos = context.ParseResult.GetValueForOption(searchWorkMinKudosOption);
+                var maxKudos = context.ParseResult.GetValueForOption(searchWorkMaxKudosOption);
+                var minComments = context.ParseResult.GetValueForOption(searchWorkMinCommentsOption);
+                var maxComments = context.ParseResult.GetValueForOption(searchWorkMaxCommentsOption);
+                var minBookmarks = context.ParseResult.GetValueForOption(searchWorkMinBookmarksOption);
+                var maxBookmarks = context.ParseResult.GetValueForOption(searchWorkMaxBookmarksOption);
+                var sortBy = context.ParseResult.GetValueForOption(searchWorkSortByOption);
+                var sortOrder = context.ParseResult.GetValueForOption(searchWorkSortOrderOption);
+
+                Console.WriteLine($"Query: {query}\nTitle: {title}\nAuthor: {author}\nDate: {date}\nComplete: {complete}\nCrossovers: {crossovers}\nSingle Chapter: {singleChapter}\nLanguage: {language}\nFandoms: {fandoms}\nRatings: {ratings}\nWarnings: {warnings}\nCategories: {categories}\nCharacters: {characters}\nRelationships: {relationships}\nAdditional Tags: {additionalTags}\nMin Words: {minWords}\nMax Words: {maxWords}\nMin Hits: {minHits}\nMax Hits: {maxHits}\nMin Kudos: {minKudos}\nMax Kudos: {maxKudos}\nMin Comments: {minComments}\nMax Comments: {maxComments}\nMin Bookmarks: {minBookmarks}\nMax Bookmarks: {maxBookmarks}\nSort By: {sortBy}\nSort Order: {sortOrder}");
+
+                var searchQuery = new WorkSearch(query, title, author, date, complete, crossovers, singleChapter, language, fandoms, ratings, warnings, categories, characters, relationships,git additionalTags, minWords, maxWords, minHits, maxHits, minKudos, maxKudos, minComments, maxComments, minBookmarks, maxBookmarks, sortBy, sortOrder);
+                
+                
+                Console.WriteLine(searchQuery.GenerateSearchQuery());
+
+                var results = await searchQuery.Search(2);
+                Console.WriteLine(results.works.ToList()[0].Language);
+
+            }); 
+                //this.SetHandler((query, title, author,
+                //{
+                //    Console.WriteLine($"test {query} {title} {author}");
+                //}, searchWorkQuery, searchWorkTitleOption, searchWorkAuthorOption);
+
+                //// Handler using query and option
+                //this.SetHandler((string query, string title) =>
+                //{
+                //    Console.WriteLine($"test {query} {title}");
+                //}, searchWorkQuery, searchWorkTitleOption);
+            }
     }
 }

@@ -17,6 +17,7 @@ namespace ao3.lib
         {
             ["No Archive Warnings Apply"] = Warning.NoArchiveWarningsApply,
             ["Creator Chose Not To Use Archive Warnings"] = Warning.CreatorChoseNotToUseArchiveWarnings,
+            ["Choose Not To Use Archive Warnings"] = Warning.CreatorChoseNotToUseArchiveWarnings, // can happen in meta
             ["Graphic Depictions Of Violence"] = Warning.GraphicDepictionsOfViolence,
             ["Major Character Death"] = Warning.MajorCharacterDeath
         };
@@ -40,6 +41,7 @@ namespace ao3.lib
             ["F/F"] = Category.FF,
             ["F/M"] = Category.FM,
             ["Gen"] = Category.Gen,
+            ["No category"] = Category.Gen, // can happen on meta
             ["M/M"] = Category.MM,
             ["Multi"] = Category.Multi,
             ["Other"] = Category.Other

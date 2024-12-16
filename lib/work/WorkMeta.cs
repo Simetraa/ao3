@@ -3,8 +3,10 @@
 namespace ao3.lib.work
 {
 
-    public class WorkMeta(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed, Rating rating, Warning archiveWarning, Category category, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags) : WorkBase(id, title, rating, archiveWarning, category, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
+    public class WorkMeta(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed, Rating rating, IEnumerable<Warning> archiveWarnings, IEnumerable<Category> categories, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags) : WorkBase(id, title, rating, archiveWarnings, categories, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
     {
+        // test on meta that doesnt have kudoes / bookmarks etc.
+        // test on anonymous fic
         public static WorkMeta ParseFromMeta(IElement html)
         {
             var idSelector = ".header .heading:first-child a:first-child";
@@ -18,7 +20,8 @@ namespace ao3.lib.work
             var summary = html.QuerySelector(summarySelector)!.TextContent;
 
             var authorSelector = ".header .heading:first-child a[rel='author']";
-            var author = html.QuerySelector(authorSelector)!.TextContent;
+            var authorEl = html.QuerySelector(authorSelector);
+            var author = authorEl?.TextContent ?? "Anonymous";
 
             var languageSelector = "dd.language";
             var language = html.QuerySelector(languageSelector)!.TextContent;
@@ -34,12 +37,12 @@ namespace ao3.lib.work
 
 
             var hitsSelector = "dd.hits";
-            var hitsString = html.QuerySelector(hitsSelector)!.TextContent;
+            var hitsString = html.QuerySelector(hitsSelector)!.TextContent ?? "0";
             var hits = Utils.ParseNumber(hitsString);
 
 
             var chaptersSelector = "dd.chapters";
-            var chapterString = html.QuerySelector(chaptersSelector)!.TextContent;
+            var chapterString = html.QuerySelector(chaptersSelector)!.TextContent ?? "0";
             var chapters = Utils.ParseNumber(chapterString.Split("/")[0]);
 
 
@@ -47,24 +50,25 @@ namespace ao3.lib.work
             int? totalChapters = totalChaptersString == "?" ? null : Utils.ParseNumber(totalChaptersString);
 
             var kudosSelector = "dd.kudos";
-            var kudosString = html.QuerySelector(kudosSelector)!.TextContent;
+            var kudosString = html.QuerySelector(kudosSelector)!?.TextContent ?? "0";
             var kudos = Utils.ParseNumber(kudosString);
 
-            var bookmarksSelector = "dd.kudos";
-            var bookmarksString = html.QuerySelector(bookmarksSelector)!.TextContent;
+            var bookmarksSelector = "dd.bookmarks";
+            var bookmarksEl = html.QuerySelector(bookmarksSelector);
+            var bookmarksString = bookmarksEl?.TextContent ?? "0";
             var bookmarks = Utils.ParseNumber(bookmarksString);
 
             var ratingSelector = ".required-tags .rating span";
             var ratingsString = html.QuerySelector(ratingSelector)!.TextContent;
             var rating = Utils.RatingDict[ratingsString];
 
-            var archiveWarningSelector = ".required-tags .warnings span";
-            var archiveWarningString = html.QuerySelector(archiveWarningSelector)!.TextContent;
-            var archiveWarning = Utils.WarningDict[archiveWarningString];
+            var archiveWarningsSelector = ".required-tags .warnings span";
+            var archiveWarningsString = html.QuerySelector(archiveWarningsSelector)!.TextContent;
+            var archiveWarnings = archiveWarningsString.Split(", ").Select(t => Utils.WarningDict[t]).ToList();
 
-            var categorySelector = ".required-tags .category span";
-            var categoryString = html.QuerySelector(categorySelector)!.TextContent;
-            var category = Utils.CategoryDict[categoryString];
+            var categoriesSelector = ".required-tags .category span";
+            var categoriesString = html.QuerySelector(categoriesSelector)!.TextContent;
+            var categories = categoriesString.Split(", ").Select(t => Utils.CategoryDict[t]).ToList();  
 
             var fandomsSelector = ".fandoms .tag";
             var fandoms = html.QuerySelectorAll(fandomsSelector).Select(t => t.TextContent).ToList();
@@ -83,7 +87,6 @@ namespace ao3.lib.work
             var completed = completedString == "Complete Work";
 
 
-
             return new WorkMeta(id,
                                 title,
                                 summary,
@@ -97,8 +100,8 @@ namespace ao3.lib.work
                                 hits,
                                 completed,
                                 rating,
-                                archiveWarning,
-                                category,
+                                archiveWarnings,
+                                categories,
                                 fandoms,
                                 relationships,
                                 characters,

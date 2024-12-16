@@ -39,8 +39,8 @@ namespace ao3Tests.lib
             Assert.AreEqual(26, work.Kudos);
             Assert.AreEqual(289, work.Hits);
             Assert.AreEqual(Rating.GeneralAudiences, work.Rating);
-            Assert.AreEqual(Warning.NoArchiveWarningsApply, work.ArchiveWarning);
-            Assert.AreEqual(Category.FM, work.Category);
+            Assert.AreEqual(Warning.NoArchiveWarningsApply, work.ArchiveWarnings);
+            Assert.AreEqual(Category.FM, work.Categories);
             Assert.AreEqual(true, work.Completed);
 
             Console.WriteLine(work.Text);
