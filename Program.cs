@@ -2,6 +2,8 @@
 using ao3.Commands;
 using ao3.lib.search;
 using ao3.lib;
+using System.Text;
+using Spectre.Console;
 
 //using System.Globalization;
 
@@ -11,7 +13,9 @@ namespace ao3
     {
         static async Task Main(string[] args)
         {
-            args = ["search", "work", "--title", "Pureblood pretense", "--author", "murkybluematter"];
+            System.Console.OutputEncoding = Encoding.UTF8;
+
+            args = ["info", "work", "57149356"];
 
             var rootCommand = new RootCommand();
 
@@ -21,9 +25,18 @@ namespace ao3
             // Add the search work command
             searchCommand.AddCommand(new SearchWorkCommand());
 
+            var infoCommand = new Command("info", "Get info from AO3");
+            infoCommand.AddCommand(new InfoWorkCommand());
+
             rootCommand.AddCommand(searchCommand);
+            rootCommand.AddCommand(infoCommand);
 
             await rootCommand.InvokeAsync(args);
+
+
+
+
+
 
 
 

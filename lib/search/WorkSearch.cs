@@ -155,9 +155,11 @@ namespace ao3.lib.search
 
         public static (int pageCount, int workCount) ParseWorkPageMeta(IDocument document)
         {
-            var heading = document.QuerySelector("h3.heading:has(>a[title='Work search results help']")!.TextContent;
-            var headingRegex = new System.Text.RegularExpressions.Regex("([\\d,]+) Found  ?"); // TODO: Make this more robust
-            var match = headingRegex.Match(heading);
+            var headingSelector = "ul + h3.heading";
+            var heading = document.QuerySelector(headingSelector);
+            var headingText = heading.TextContent;
+            var headingRegex = new System.Text.RegularExpressions.Regex("([\\d,]+) Found  \\?"); // TODO: Make this more robust
+            var match = headingRegex.Match(headingText);
             var workCountString = match.Groups[1].Value;
             var workCount = Utils.ParseNumber(workCountString);
 

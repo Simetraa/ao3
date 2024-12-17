@@ -1,6 +1,11 @@
-using System.CommandLine;
+﻿using System.CommandLine;
+using System.Diagnostics.SymbolStore;
+using System.Net.WebSockets;
+using System.Text;
+using ao3.commands;
 using ao3.lib;
 using ao3.lib.search;
+using Spectre.Console;
 
 namespace ao3.Commands
 {
@@ -162,25 +167,114 @@ namespace ao3.Commands
 
                 Console.WriteLine($"Query: {query}\nTitle: {title}\nAuthor: {author}\nDate: {date}\nComplete: {complete}\nCrossovers: {crossovers}\nSingle Chapter: {singleChapter}\nLanguage: {language}\nFandoms: {fandoms}\nRatings: {ratings}\nWarnings: {warnings}\nCategories: {categories}\nCharacters: {characters}\nRelationships: {relationships}\nAdditional Tags: {additionalTags}\nMin Words: {minWords}\nMax Words: {maxWords}\nMin Hits: {minHits}\nMax Hits: {maxHits}\nMin Kudos: {minKudos}\nMax Kudos: {maxKudos}\nMin Comments: {minComments}\nMax Comments: {maxComments}\nMin Bookmarks: {minBookmarks}\nMax Bookmarks: {maxBookmarks}\nSort By: {sortBy}\nSort Order: {sortOrder}");
 
-                var searchQuery = new WorkSearch(query, title, author, date, complete, crossovers, singleChapter, language, fandoms, ratings, warnings, categories, characters, relationships,git additionalTags, minWords, maxWords, minHits, maxHits, minKudos, maxKudos, minComments, maxComments, minBookmarks, maxBookmarks, sortBy, sortOrder);
+                var searchQuery = new WorkSearch(query, title, author, date, complete, crossovers, singleChapter, language, fandoms, ratings, warnings, categories, characters, relationships, additionalTags, minWords, maxWords, minHits, maxHits, minKudos, maxKudos, minComments, maxComments, minBookmarks, maxBookmarks, sortBy, sortOrder);
                 
                 
                 Console.WriteLine(searchQuery.GenerateSearchQuery());
 
-                var results = await searchQuery.Search(2);
-                Console.WriteLine(results.works.ToList()[0].Language);
+                var results = await searchQuery.Search();
+                
+                foreach(var work in results.works)
+                {
+                    Console.WriteLine($"Currently printing {work.Id}");
+
+                    //// Create a table
+                    //var table = new Table();
+
+                    //// Add some columns
+                    //table.AddColumns(["ID,", "Title", "Author", "Description", "Fandoms", "Warnings", "Freeform Tags", "Language", "Words", "Chapters"]);
+
+                    //table.AddRow(work.Id.ToString(), work.Title, work.AuthorString, work.Description, string.Join(", ", work.Fandoms), string.Join(", ", work.ArchiveWarnings), string.Join(", ", work.FreeformTags), work.Language, work.Words.ToString(), $"{work.CompletedChapters}/{work.CompletedChapters}");
+
+                    //// Render the table to the console
+                    //AnsiConsole.Write(table);
+
+                    var ratingSymbol = Symbols.RatingSymbols[work.Rating];
+
+                    var categorySymbol = work.Categories.Count() > 1 ? Symbols.CategorySymbols[Category.Multi] : Symbols.CategorySymbols[work.Categories.First()];
+                    
+                   
+                    Text warningSymbol;
+
+                    if(work.ArchiveWarnings.Contains(Warning.MajorCharacterDeath) || work.ArchiveWarnings.Contains(Warning.GraphicDepictionsOfViolence))
+                    {
+                        warningSymbol = new Text("!");
+                    } else if (work.ArchiveWarnings.Contains(Warning.CreatorChoseNotToUseArchiveWarnings))
+                    {
+                        warningSymbol = new Text("?");
+                    } else
+                    {
+                        warningSymbol = new Text(" ");
+                    }
+
+
+                    var completedSymbol = work.Completed ? new Text("✓") : new Text("✘");
+
+
+                    var titleAndAuthor = Markup.FromInterpolated($"[red]{work.Title}[/] by [red]{work.AuthorString}[/]");
+
+                    var workTable = new Table();
+                    workTable.Expand();
+                    workTable.HideHeaders();
+                    workTable.Border = TableBorder.Rounded;
+
+                    workTable.AddColumn("");
+
+
+                    var symbolTable = new Table();
+                    symbolTable.HideHeaders();
+                    symbolTable.Border = TableBorder.None;
+                    symbolTable.Collapse();
+
+                    symbolTable.AddColumn("");
+                    symbolTable.AddColumn("");
+
+                    symbolTable.AddRow(ratingSymbol, categorySymbol);
+                    symbolTable.AddRow(warningSymbol, completedSymbol);
+
+                    //var headerTable = new Columns(
+                    //    symbolTable.Centered(), new Rows(
+                    //        titleAndAuthor,
+                    //        new Text(string.Join(", ", work.Fandoms)))
+                    //    ).Collapse();
+
+                   
+                    var headerTable = new Grid();
+                    headerTable.AddColumn();
+                    headerTable.AddColumn();
+                    headerTable.AddColumn();
+
+                    headerTable.AddRow(ratingSymbol, categorySymbol, titleAndAuthor);
+                    headerTable.AddRow(warningSymbol, completedSymbol, new Text(string.Join(", ", work.Fandoms)));
+
+
+                    var characterTagsList = work.Characters.Select(n => $"[yellow]{n}[/]");
+                    var freeformTagsList = work.FreeformTags.Select(n => $"[yellow]{n}[/]");
+                    var tagsList = characterTagsList.Concat(freeformTagsList);
+
+                    var tagsString = string.Join(", ", tagsList);
+
+                    // TODO:  Make sure to escape each tag.
+                    var tags = new Markup(tagsString);
+
+                    workTable.AddRow(headerTable);
+                    workTable.AddRow(new Rule("[red]Tags[/]"));
+                    workTable.AddRow(tags);
+                    workTable.AddRow(new Rule("[red]Description[/]"));
+                    workTable.AddRow(work.Description);
+                    workTable.AddRow(new Rule("[red]Stats[/]"));
+                    workTable.AddRow(new Columns(
+                        new Text($"Language: {work.Language}"),
+                        new Text($"Words: {work.Words:n0}"),
+                        new Text($"Chapters: {work.CompletedChapters}/{work.TotalChapters?.ToString() ?? "?"}"),
+                        new Text($"Kudos: {work.Kudos:n0}"),
+                        new Text($"Hits: {work.Hits:n0}")));
+
+
+                    AnsiConsole.Write(workTable);
+                }
 
             }); 
-                //this.SetHandler((query, title, author,
-                //{
-                //    Console.WriteLine($"test {query} {title} {author}");
-                //}, searchWorkQuery, searchWorkTitleOption, searchWorkAuthorOption);
-
-                //// Handler using query and option
-                //this.SetHandler((string query, string title) =>
-                //{
-                //    Console.WriteLine($"test {query} {title}");
-                //}, searchWorkQuery, searchWorkTitleOption);
             }
     }
 }

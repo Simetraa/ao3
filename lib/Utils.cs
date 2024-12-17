@@ -68,6 +68,7 @@ namespace ao3.lib
             return int.Parse(str.Replace(",", ""));
         }
 
+
         // Parse a string containing a range into a min and max.
         public static string FormatRange(int? min, int? max)
         {

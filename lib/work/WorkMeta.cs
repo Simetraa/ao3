@@ -17,7 +17,8 @@ namespace ao3.lib.work
             var title = html.QuerySelector(titleSelector)!.TextContent;
 
             var summarySelector = ".summary p";
-            var summary = html.QuerySelector(summarySelector)!.TextContent;
+            var summaryEl = html.QuerySelector(summarySelector);
+            var summary = summaryEl?.TextContent ?? "";
 
             var authorSelector = ".header .heading:first-child a[rel='author']";
             var authorEl = html.QuerySelector(authorSelector);
@@ -64,7 +65,11 @@ namespace ao3.lib.work
 
             var archiveWarningsSelector = ".required-tags .warnings span";
             var archiveWarningsString = html.QuerySelector(archiveWarningsSelector)!.TextContent;
-            var archiveWarnings = archiveWarningsString.Split(", ").Select(t => Utils.WarningDict[t]).ToList();
+            var archiveWarnings = archiveWarningsString.Split(", ")
+                .Where(Utils.WarningDict.ContainsKey)
+                .Select(t => Utils.WarningDict[t])
+                .ToList();
+
 
             var categoriesSelector = ".required-tags .category span";
             var categoriesString = html.QuerySelector(categoriesSelector)!.TextContent;
