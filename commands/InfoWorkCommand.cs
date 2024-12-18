@@ -15,8 +15,7 @@ namespace ao3.Commands
         public InfoWorkCommand() : base("work", "Get info about a work")
         {
             var idArgument = new Argument<int>(
-                name: "idArgument",
-                description: "Searches all the fields associated with a work in the database, including summary, notes and tags, but not the full work text."
+                name: "id"
                 );
 
 
@@ -75,13 +74,6 @@ namespace ao3.Commands
 
                 symbolTable.AddRow(ratingSymbol, categorySymbol);
                 symbolTable.AddRow(warningSymbol, completedSymbol);
-
-                //var headerTable = new Columns(
-                //    symbolTable.Centered(), new Rows(
-                //        titleAndAuthor,
-                //        new Text(string.Join(", ", work.Fandoms)))
-                //    ).Collapse();
-
 
                 var headerTable = new Grid();
                 headerTable.AddColumn();

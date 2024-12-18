@@ -203,7 +203,7 @@ namespace ao3.lib.search
         IEnumerable<Warning> Warnings { get; set; } = warnings ?? [];
         IEnumerable<Category> Categories { get; set; } = categories ?? [];
         IEnumerable<string> Characters { get; set; } = characters ?? [];
-        IEnumerable<string> Relationships { get; set; } = relationships ;
+        IEnumerable<string> Relationships { get; set; } = relationships ?? [];
         IEnumerable<string> AdditionalTags { get; set; } = additionalTags ?? [];
         int? MinWords { get; set; } = minWords;
         int? MaxWords { get; set; } = maxWords;

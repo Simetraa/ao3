@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace ao3.lib.search
 {
-    public class PeopleSearch(string? query, IEnumerable<string> names, IEnumerable<string> fandoms)
+    public class AuthorSearch(string? query = "",
+        IEnumerable<string>? names = null,
+        IEnumerable<string>? fandoms = null)
     {
         string? Query { get; set; } = query;
-        IEnumerable<string> Names { get; set; } = names;
-        IEnumerable<string> Fandoms { get; set; } = fandoms;
+        IEnumerable<string> Names { get; set; } = names ?? [];
+        IEnumerable<string> Fandoms { get; set; } = fandoms ?? [];
 
         public string GenerateSearchQuery()
         {
@@ -29,7 +31,7 @@ namespace ao3.lib.search
             return url;
         }
 
-        public static (int pageCount, int workCount) ParseAuthorPageMeta(IDocument document)
+        public static (int pageCount, int authorCount) ParseAuthorPageMeta(IDocument document)
         {
             var headingSelector = "p>strong";
             var heading = document.QuerySelector(headingSelector);
@@ -46,7 +48,7 @@ namespace ao3.lib.search
             return (pageCount, authorCount);
         }
 
-        public async Task<(int pageCount, int workCount, IEnumerable<Author> works)> Search(int page = 1)
+        public async Task<(int pageCount, int authorCount, IEnumerable<AuthorMeta> authors)> Search(int page = 1)
         {
             var config = Configuration.Default.WithDefaultLoader();
             var address = GenerateSearchQuery();
@@ -59,11 +61,11 @@ namespace ao3.lib.search
 
             var authorElements = document.QuerySelectorAll("ol.index .user");
 
-            var (pageCount, workCount) = ParseAuthorPageMeta(document);
+            var (pageCount, authorCount) = ParseAuthorPageMeta(document);
 
             IEnumerable<AuthorMeta> authors = authorElements.Select(AuthorMeta.ParseFromMeta);
 
-            return (pageCount, workCount, authors);
+            return (pageCount, authorCount, authors);
         }
 
 

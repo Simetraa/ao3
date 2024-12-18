@@ -20,8 +20,9 @@ namespace ao3.lib.work
 
         public static Work ParseFromWork(AngleSharp.Dom.IDocument document)
         {
-            var idSelector = ".share a";
-            var idString = document.QuerySelector(idSelector)!.GetAttribute("href")!;
+            var idSelector = ".download ul li a";
+            var idEl = document.QuerySelector(idSelector);
+            var idString = idEl.GetAttribute("href")!;
             var id = Utils.ParseNumber(idString.Split("/")[2]);
 
 
@@ -31,10 +32,13 @@ namespace ao3.lib.work
             title = title.Trim();
 
             var summarySelector = ".summary p";
-            var summary = document.QuerySelector(summarySelector)!.TextContent;
+            var summaryEl = document.QuerySelector(summarySelector);
+            var summary = summaryEl?.TextContent ?? "";
+
 
             var authorSelector = "h3.byline a";
-            var author = document.QuerySelector(authorSelector)!.TextContent;
+            var authorEl = document.QuerySelector(authorSelector);
+            var author = authorEl?.TextContent ?? "Anonymous";
 
             var languageSelector = "dd.language";
             var language = document.QuerySelector(languageSelector)!.TextContent;
@@ -59,25 +63,28 @@ namespace ao3.lib.work
             var words = Utils.ParseNumber(wordsString);
 
             var kudosSelector = "dd.kudos";
-            var kudosString = document.QuerySelector(kudosSelector)!.TextContent;
+            var kudosString = document.QuerySelector(kudosSelector)!?.TextContent ?? "0";
             var kudos = Utils.ParseNumber(kudosString);
 
             var hitsSelector = "dd.hits";
-            var hitsString = document.QuerySelector(hitsSelector)!.TextContent;
+            var hitsString = document.QuerySelector(hitsSelector)!.TextContent ?? "0";
             var hits = Utils.ParseNumber(hitsString);
 
             var bookmarksSelector = "dd.bookmarks";
-            var bookmarksString = document.QuerySelector(bookmarksSelector)!.TextContent;
+            var bookmarksEl = document.QuerySelector(bookmarksSelector);
+            var bookmarksString = bookmarksEl?.TextContent ?? "0";
             var bookmarks = Utils.ParseNumber(bookmarksString);
 
 
             var chaptersSelector = "dd.chapters";
-            var chapterString = document.QuerySelector(chaptersSelector)!.TextContent;
+            var chapterString = document.QuerySelector(chaptersSelector)!.TextContent ?? "0";
             var chapters = Utils.ParseNumber(chapterString.Split("/")[0]);
+
 
 
             var totalChaptersString = chapterString.Split("/")[1];
             int? totalChapters = totalChaptersString == "?" ? null : Utils.ParseNumber(totalChaptersString);
+
 
             var ratingSelector = ".rating .tag";
             var ratingString = document.QuerySelector(ratingSelector)!.TextContent;
@@ -85,7 +92,10 @@ namespace ao3.lib.work
 
             var archiveWarningsSelector = ".warning .tag";
             var archiveWarningsString = document.QuerySelector(archiveWarningsSelector)!.TextContent;
-            var archiveWarnings = archiveWarningsString.Split(", ").Select(t => Utils.WarningDict[t]).ToList();
+            var archiveWarnings = archiveWarningsString.Split(", ")
+                .Where(Utils.WarningDict.ContainsKey)
+                .Select(t => Utils.WarningDict[t])
+                .ToList();
 
             var categoriesSelector = ".category .tag";
             var categoriesString = document.QuerySelector(categoriesSelector)!.TextContent;
@@ -110,9 +120,6 @@ namespace ao3.lib.work
                             completed, updated, published, rating, archiveWarnings, categories, fandoms, relationships,
                             characters, tags, text);
         }
-
-
-
 
 
         public static async Task<Work> ParseFromIdAsync(int id)

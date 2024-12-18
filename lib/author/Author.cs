@@ -10,7 +10,6 @@ namespace ao3.lib.author
         public string Id { get; } = id;
         public string AvatarUrl { get; } = avatarUrl;
         public string DateJoined { get; } = dateJoined;
-
         public string? Location { get; } = location;
         public DateOnly? Birthday { get; } = birthday;
 
@@ -49,11 +48,19 @@ namespace ao3.lib.author
             DateOnly? birthday = birthdayText == null ? null : Utils.ParseDate(birthdayText);
 
 
-            var bioSelector = ".bio .userstuff";
-            var bio = document.QuerySelector(bioSelector)?.TextContent ?? null;
+            var bioParagraphsSelector = ".bio blockquote p";
+            var bioParagraphEls = document.QuerySelectorAll(bioParagraphsSelector);
+
+            var bioParagraphs = bioParagraphEls
+                .Select(p => p.TextContent);
+            
+            var bio = string.Join("\n", bioParagraphs);
 
 
-            return new Author(id, name, dateJoined, location, birthday, pseuds, bio, "");
+            var avatarSelector = ".icon img";
+            var url = document.QuerySelector(avatarSelector)!.GetAttribute("src");
+
+            return new Author(id, name, dateJoined, location, birthday, pseuds, bio, url);
         }
 
         public async Task<(int pageCount, int workCount, IEnumerable<WorkMeta> works)> GetWorks(int page = 1)
@@ -65,6 +72,12 @@ namespace ao3.lib.author
 
 
             return (pageCount, workCount, works);
+        }
+
+        public async Task<Stream> DownloadAvatar()
+        {
+            using var client = new HttpClient();
+            return await client.GetStreamAsync(AvatarUrl);
         }
     }
 }
