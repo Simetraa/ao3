@@ -238,14 +238,19 @@ namespace ao3.Commands
                     //        new Text(string.Join(", ", work.Fandoms)))
                     //    ).Collapse();
 
-                   
+
                     var headerTable = new Grid();
                     headerTable.AddColumn();
                     headerTable.AddColumn();
                     headerTable.AddColumn();
+                    headerTable.AddColumn();
+                    
 
-                    headerTable.AddRow(ratingSymbol, categorySymbol, titleAndAuthor);
-                    headerTable.AddRow(warningSymbol, completedSymbol, new Text(string.Join(", ", work.Fandoms)));
+                    var updatedText = Markup.FromInterpolated($"[gray]{work.Updated}[/]");
+                    var fandomsText = new Text(string.Join(", ", work.Fandoms));
+
+                    headerTable.AddRow(ratingSymbol, categorySymbol, titleAndAuthor, updatedText);
+                    headerTable.AddRow(warningSymbol, completedSymbol, fandomsText);
 
 
                     var characterTagsList = work.Characters.Select(n => $"[yellow]{n}[/]");

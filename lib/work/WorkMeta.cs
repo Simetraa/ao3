@@ -3,10 +3,15 @@
 namespace ao3.lib.work
 {
 
-    public class WorkMeta(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed, Rating rating, IEnumerable<Warning> archiveWarnings, IEnumerable<Category> categories, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags) : WorkBase(id, title, rating, archiveWarnings, categories, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
+    public class WorkMeta(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, DateOnly updated, int words, int kudos, int bookmarks, int hits, bool completed, Rating rating, IEnumerable<Warning> archiveWarnings, IEnumerable<Category> categories, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags) : WorkBase(id, title, rating, archiveWarnings, categories, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
     {
+        public DateOnly Updated { get; } = updated;
+
+
         // test on meta that doesnt have kudoes / bookmarks etc.
         // test on anonymous fic
+
+
         public static WorkMeta ParseFromMeta(IElement html)
         {
             var idSelector = ".header .heading:first-child a:first-child";
@@ -99,6 +104,7 @@ namespace ao3.lib.work
                                 language,
                                 chapters,
                                 totalChapters,
+                                updated,
                                 words,
                                 kudos,
                                 bookmarks,

@@ -15,7 +15,7 @@ namespace ao3
         {
             System.Console.OutputEncoding = Encoding.UTF8;
 
-            args = ["download", "work", "12891420", "12279219"];
+            args = ["search", "work", "anonymous"];
 
             var rootCommand = new RootCommand();
 
@@ -35,15 +35,23 @@ namespace ao3
                 getDefaultValue: () => 10);
             downloadCommand.AddGlobalOption(threadsOption);
 
+            var outputOption = new Option<string>
+                (name: "--output",
+                description: "Output format for downloaded files",
+                getDefaultValue: () => "%author% - %title%.%ext%");
+
             var formatOption = new Option<DownloadType>
                 (name: "--format",
                 description: "Format to download files in.",
                 getDefaultValue: () => DownloadType.HTML);
+
+
             downloadCommand.AddGlobalOption(formatOption);
+            downloadCommand.AddGlobalOption(outputOption);
+            downloadCommand.AddGlobalOption(threadsOption);
 
-
-            downloadCommand.AddCommand(new DownloadWorkCommand(threadsOption, formatOption));
-            //downloadCommand.AddCommand(new DownloadAuthorCommand(threadsOption, formatOption));
+            downloadCommand.AddCommand(new DownloadWorkCommand(threadsOption, formatOption, outputOption));
+            downloadCommand.AddCommand(new DownloadAuthorCommand(threadsOption, formatOption, outputOption));
 
             rootCommand.AddCommand(searchCommand);
             rootCommand.AddCommand(infoCommand);

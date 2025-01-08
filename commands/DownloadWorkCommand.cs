@@ -12,7 +12,7 @@ namespace ao3.Commands
 {
     public class DownloadWorkCommand : Command
     {
-        public DownloadWorkCommand(Option<int> threadsOption, Option<DownloadType> formatOption) : base("work", "Get info about a work")
+        public DownloadWorkCommand(Option<int> threadsOption, Option<DownloadType> formatOption, Option<string> outputOption) : base("work", "Get info about a work")
         {
             var idArgument = new Argument<IEnumerable<int>>(
                       name: "id",
@@ -26,24 +26,40 @@ namespace ao3.Commands
             {
                 var idList = context.ParseResult.GetValueForArgument(idArgument);
                 var threads = context.ParseResult.GetValueForOption(threadsOption);
+                var output = context.ParseResult.GetValueForOption(outputOption);
                 var format = context.ParseResult.GetValueForOption(formatOption);
 
                 //first download the Work data concurrently, using thread count
                 // then, get the download urls using the Work.Download() method.
 
-                Console.WriteLine(value: $"{idList} ${threads} ${format}-");
+                //Console.WriteLine(value: $"{idList} ${threads} ${format}-");
 
-                // First download the Work data concurrently, using thread count
-                var workTasks = idList.Select(id => Work.ParseFromIdAsync(id)).ToList();
-                var works = await Task.WhenAll(workTasks);
+                ParallelOptions options = new()
+                {
+                    MaxDegreeOfParallelism = threads
+                };
 
-                // Then, get the download URLs using the Work.Download() method
-                var downloadTasks = works.Select(work => work.Download(format, "%title%"));
-                await Task.WhenAll(downloadTasks);
+                await AnsiConsole.Progress()
+                    .StartAsync(async ctx =>
+                    {
+                        var task = ctx.AddTask("[green]Download works...[/]").MaxValue(idList.Count());
+
+                        while (!ctx.IsFinished)
+                        {
+                            await Parallel.ForEachAsync(idList, options, async (id, token) =>
+                            {
+                                var work = await Work.ParseFromIdAsync(id);
+                                task.Increment(.5);
+                                await work.Download(format, output);
+                                task.Increment(.5);
+
+                            });                        
+                        }
+                    });
+
 
 
                 Console.Write($"Downloading {idList.Count()} works with {threads} threads in {format} format");
-
             });
         }
     }
