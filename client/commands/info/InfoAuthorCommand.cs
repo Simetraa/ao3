@@ -1,15 +1,8 @@
 ﻿using System.CommandLine;
-using System.Diagnostics.SymbolStore;
-using System.Net.WebSockets;
-using System.Text;
-using ao3.commands;
-using ao3.lib;
 using ao3.lib.author;
-using ao3.lib.search;
-using ao3.lib.work;
 using Spectre.Console;
 
-namespace ao3.Commands
+namespace ao3.client.commands.info
 {
     public class InfoAuthorCommand : Command
     {
@@ -25,8 +18,8 @@ namespace ao3.Commands
             );
 
 
-            this.AddArgument(nameArgument);
-            this.AddOption(avatarOption);
+            AddArgument(nameArgument);
+            AddOption(avatarOption);
 
             // include arguments and options
 
@@ -50,7 +43,7 @@ namespace ao3.Commands
                                           Markup.FromInterpolated($"ID: {author.Id}"),
                                           Markup.FromInterpolated($"Location: {author.Location}"),
                                           new Rule("[red]Bio[/]"),
-                                          new Text(author.Bio));
+                                          new Text(author.Bio ?? ""));
 
                     grid.AddRow(panel);
 

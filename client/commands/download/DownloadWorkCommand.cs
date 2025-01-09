@@ -1,24 +1,19 @@
 ﻿using System.CommandLine;
-using System.Diagnostics.SymbolStore;
-using System.Net.WebSockets;
-using System.Text;
-using ao3.commands;
 using ao3.lib;
-using ao3.lib.search;
 using ao3.lib.work;
 using Spectre.Console;
 
-namespace ao3.Commands
+namespace ao3.client.commands.download
 {
     public class DownloadWorkCommand : Command
     {
-        public DownloadWorkCommand(Option<int> threadsOption, Option<DownloadType> formatOption, Option<string> outputOption) : base("work", "Get info about a work")
+        public DownloadWorkCommand(Option<int> threadsOption, Option<DownloadType> formatOption, Option<string> outputOption) : base("work", "Download a list of works")
         {
             var idArgument = new Argument<IEnumerable<int>>(
                       name: "id",
                       description: "The IDs of the works to download");
 
-            this.AddArgument(idArgument);
+            AddArgument(idArgument);
 
             // include arguments and options
 
@@ -53,7 +48,7 @@ namespace ao3.Commands
                                 await work.Download(format, output);
                                 task.Increment(.5);
 
-                            });                        
+                            });
                         }
                     });
 

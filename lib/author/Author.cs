@@ -58,7 +58,7 @@ namespace ao3.lib.author
 
 
             var avatarSelector = ".icon img";
-            var url = document.QuerySelector(avatarSelector)!.GetAttribute("src");
+            var url = document.QuerySelector(avatarSelector)!.GetAttribute("src")!;
 
             return new Author(id, name, dateJoined, location, birthday, pseuds, bio, url);
         }

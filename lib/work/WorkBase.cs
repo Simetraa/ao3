@@ -1,6 +1,4 @@
-﻿using Spectre.Console;
-
-namespace ao3.lib.work
+﻿namespace ao3.lib.work
 {
     public abstract class WorkBase(int id, string title, Rating rating, IEnumerable<Warning> archiveWarnings, IEnumerable<Category> categories, List<string> fandoms, List<string> relationships, List<string> characters, bool completed, string description, string authorString, List<string> freeformTags, string language, int words, int completedChapters, int? totalChapters, int kudos, int bookmarks, int hits)
     {

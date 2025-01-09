@@ -1,26 +1,19 @@
 ﻿using System.CommandLine;
-using System.Diagnostics.SymbolStore;
-using System.Net.WebSockets;
-using System.Text;
-using ao3.commands;
 using ao3.lib;
 using ao3.lib.author;
-using ao3.lib.search;
-using ao3.lib.work;
-using Microsoft.Extensions.Options;
 using Spectre.Console;
 
-namespace ao3.Commands
+namespace ao3.client.commands.download
 {
     public class DownloadAuthorCommand : Command
     {
-        public DownloadAuthorCommand(Option<int> threadsOption, Option<DownloadType> formatOption, Option<string> outputOption) : base("author", "Get info about a work")
+        public DownloadAuthorCommand(Option<int> threadsOption, Option<DownloadType> formatOption, Option<string> outputOption) : base("author", "Download all works from an author")
         {
             var nameArgument = new Argument<string>(
                       name: "names",
                       description: "The names of the author to download works from.");
 
-            this.AddArgument(nameArgument);
+            AddArgument(nameArgument);
 
             // include arguments and options
 

@@ -183,6 +183,11 @@ namespace ao3.lib.search
 
             var workElements = document.QuerySelectorAll("li.work");
 
+            if(workElements.Length == 0)
+            {
+                return (0, 0, []);
+            }
+
             var (pageCount, workCount) = ParseWorkPageMeta(document);
 
             IEnumerable<WorkMeta> works = workElements.Select(WorkMeta.ParseFromMeta);

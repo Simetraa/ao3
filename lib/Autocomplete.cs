@@ -16,7 +16,6 @@ namespace ao3.lib
 
             var content = await response.Content.ReadAsStringAsync();
 
-            List<Dictionary<string, string>> c;
             List<Dictionary<string, string>> json = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(content)!;
 
             return json.Select(i => i["name"]);

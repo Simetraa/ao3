@@ -1,4 +1,5 @@
-﻿using AngleSharp;
+﻿using System.Reflection.Metadata;
+using AngleSharp;
 using ao3.lib.author;
 
 namespace ao3.lib.work
@@ -120,7 +121,6 @@ namespace ao3.lib.work
                             completed, updated, published, rating, archiveWarnings, categories, fandoms, relationships,
                             characters, tags, text);
         }
-
 
         public static async Task<Work> ParseFromIdAsync(int id)
         {

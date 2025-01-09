@@ -1,17 +1,17 @@
 ﻿using System.CommandLine;
-using System.Diagnostics.SymbolStore;
-using System.Net.WebSockets;
-using System.Text;
+using System.Reflection.Metadata.Ecma335;
+using System.Web;
 using ao3.commands;
 using ao3.lib;
 using ao3.lib.search;
 using Spectre.Console;
+using static System.Net.WebRequestMethods;
 
-namespace ao3.Commands
+namespace ao3.client.commands.search
 {
     public class SearchWorkCommand : Command
     {
-        public SearchWorkCommand() : base("work", "Search for a work")
+        public SearchWorkCommand(Option<int> pageOption) : base("work", "Search for a work")
         {
             var searchWorkQuery = new Argument<string>(
                 name: "query",
@@ -41,7 +41,7 @@ namespace ao3.Commands
             var searchWorkFandomsOption = new Option<IEnumerable<string>>(
                 aliases: ["--fandoms"],
                 description: "Search by fandoms")
-            { AllowMultipleArgumentsPerToken = true};
+            { AllowMultipleArgumentsPerToken = true };
             var searchWorkRatingsOption = new Option<Rating>(
                 aliases: ["--rating"],
                 description: "Search by rating");
@@ -102,33 +102,33 @@ namespace ao3.Commands
             aliases: ["--sort-order"],
             description: "Sort order");
 
-            this.AddArgument(searchWorkQuery);
-            this.AddOption(searchWorkTitleOption);
-            this.AddOption(searchWorkAuthorOption);
-            this.AddOption(searchWorkDateOption);
-            this.AddOption(searchWorkCompleteOption);
-            this.AddOption(searchWorkCrossoversOption);
-            this.AddOption(searchWorkSingleChapterOption);
-            this.AddOption(searchWorkLanguageOption);
-            this.AddOption(searchWorkFandomsOption);
-            this.AddOption(searchWorkRatingsOption);
-            this.AddOption(searchWorkWarningsOption);
-            this.AddOption(searchWorkCategoriesOption);
-            this.AddOption(searchWorkCharactersOption);
-            this.AddOption(searchWorkRelationshipsOption);
-            this.AddOption(searchWorkAdditionalTagsOption);
-            this.AddOption(searchWorkMinWordsOption);
-            this.AddOption(searchWorkMaxWordsOption);
-            this.AddOption(searchWorkMinHitsOption);
-            this.AddOption(searchWorkMaxHitsOption);
-            this.AddOption(searchWorkMinKudosOption);
-            this.AddOption(searchWorkMaxKudosOption);
-            this.AddOption(searchWorkMinCommentsOption);
-            this.AddOption(searchWorkMaxCommentsOption);
-            this.AddOption(searchWorkMinBookmarksOption);
-            this.AddOption(searchWorkMaxBookmarksOption);
-            this.AddOption(searchWorkSortByOption);
-            this.AddOption(searchWorkSortOrderOption);
+            AddArgument(searchWorkQuery);
+            AddOption(searchWorkTitleOption);
+            AddOption(searchWorkAuthorOption);
+            AddOption(searchWorkDateOption);
+            AddOption(searchWorkCompleteOption);
+            AddOption(searchWorkCrossoversOption);
+            AddOption(searchWorkSingleChapterOption);
+            AddOption(searchWorkLanguageOption);
+            AddOption(searchWorkFandomsOption);
+            AddOption(searchWorkRatingsOption);
+            AddOption(searchWorkWarningsOption);
+            AddOption(searchWorkCategoriesOption);
+            AddOption(searchWorkCharactersOption);
+            AddOption(searchWorkRelationshipsOption);
+            AddOption(searchWorkAdditionalTagsOption);
+            AddOption(searchWorkMinWordsOption);
+            AddOption(searchWorkMaxWordsOption);
+            AddOption(searchWorkMinHitsOption);
+            AddOption(searchWorkMaxHitsOption);
+            AddOption(searchWorkMinKudosOption);
+            AddOption(searchWorkMaxKudosOption);
+            AddOption(searchWorkMinCommentsOption);
+            AddOption(searchWorkMaxCommentsOption);
+            AddOption(searchWorkMinBookmarksOption);
+            AddOption(searchWorkMaxBookmarksOption);
+            AddOption(searchWorkSortByOption);
+            AddOption(searchWorkSortOrderOption);
 
 
 
@@ -164,45 +164,32 @@ namespace ao3.Commands
                 var maxBookmarks = context.ParseResult.GetValueForOption(searchWorkMaxBookmarksOption);
                 var sortBy = context.ParseResult.GetValueForOption(searchWorkSortByOption);
                 var sortOrder = context.ParseResult.GetValueForOption(searchWorkSortOrderOption);
-
-                Console.WriteLine($"Query: {query}\nTitle: {title}\nAuthor: {author}\nDate: {date}\nComplete: {complete}\nCrossovers: {crossovers}\nSingle Chapter: {singleChapter}\nLanguage: {language}\nFandoms: {fandoms}\nRatings: {ratings}\nWarnings: {warnings}\nCategories: {categories}\nCharacters: {characters}\nRelationships: {relationships}\nAdditional Tags: {additionalTags}\nMin Words: {minWords}\nMax Words: {maxWords}\nMin Hits: {minHits}\nMax Hits: {maxHits}\nMin Kudos: {minKudos}\nMax Kudos: {maxKudos}\nMin Comments: {minComments}\nMax Comments: {maxComments}\nMin Bookmarks: {minBookmarks}\nMax Bookmarks: {maxBookmarks}\nSort By: {sortBy}\nSort Order: {sortOrder}");
+                var page = context.ParseResult.GetValueForOption(pageOption);
 
                 var searchQuery = new WorkSearch(query, title, author, date, complete, crossovers, singleChapter, language, fandoms, ratings, warnings, categories, characters, relationships, additionalTags, minWords, maxWords, minHits, maxHits, minKudos, maxKudos, minComments, maxComments, minBookmarks, maxBookmarks, sortBy, sortOrder);
-                
-                
+
                 Console.WriteLine(searchQuery.GenerateSearchQuery());
 
                 var results = await searchQuery.Search();
-                
-                foreach(var work in results.works)
+
+                foreach (var work in results.works)
                 {
-                    Console.WriteLine($"Currently printing {work.Id}");
-
-                    //// Create a table
-                    //var table = new Table();
-
-                    //// Add some columns
-                    //table.AddColumns(["ID,", "Title", "Author", "Description", "Fandoms", "Warnings", "Freeform Tags", "Language", "Words", "Chapters"]);
-
-                    //table.AddRow(work.Id.ToString(), work.Title, work.AuthorString, work.Description, string.Join(", ", work.Fandoms), string.Join(", ", work.ArchiveWarnings), string.Join(", ", work.FreeformTags), work.Language, work.Words.ToString(), $"{work.CompletedChapters}/{work.CompletedChapters}");
-
-                    //// Render the table to the console
-                    //AnsiConsole.Write(table);
-
                     var ratingSymbol = Symbols.RatingSymbols[work.Rating];
 
                     var categorySymbol = work.Categories.Count() > 1 ? Symbols.CategorySymbols[Category.Multi] : Symbols.CategorySymbols[work.Categories.First()];
-                    
-                   
+
+
                     Text warningSymbol;
 
-                    if(work.ArchiveWarnings.Contains(Warning.MajorCharacterDeath) || work.ArchiveWarnings.Contains(Warning.GraphicDepictionsOfViolence))
+                    if (work.ArchiveWarnings.Contains(Warning.MajorCharacterDeath) || work.ArchiveWarnings.Contains(Warning.GraphicDepictionsOfViolence))
                     {
                         warningSymbol = new Text("!");
-                    } else if (work.ArchiveWarnings.Contains(Warning.CreatorChoseNotToUseArchiveWarnings))
+                    }
+                    else if (work.ArchiveWarnings.Contains(Warning.CreatorChoseNotToUseArchiveWarnings))
                     {
                         warningSymbol = new Text("?");
-                    } else
+                    }
+                    else
                     {
                         warningSymbol = new Text(" ");
                     }
@@ -210,8 +197,10 @@ namespace ao3.Commands
 
                     var completedSymbol = work.Completed ? new Text("✓") : new Text("✘");
 
+                    var workUrl = $"https://archiveofourown.org/works/{work.Id}";
+                    var authorUrl = $"https://archiveofourown.org/users/{work.AuthorString}";
 
-                    var titleAndAuthor = Markup.FromInterpolated($"[red]{work.Title}[/] by [red]{work.AuthorString}[/]");
+                    var workDetails = Markup.FromInterpolated($"[link={workUrl}][red]{work.Title}[/][/] by [link={authorUrl}][red]{work.AuthorString}[/][/] #{work.Id} [gray]{work.Updated}[/]");
 
                     var workTable = new Table();
                     workTable.Expand();
@@ -232,34 +221,27 @@ namespace ao3.Commands
                     symbolTable.AddRow(ratingSymbol, categorySymbol);
                     symbolTable.AddRow(warningSymbol, completedSymbol);
 
-                    //var headerTable = new Columns(
-                    //    symbolTable.Centered(), new Rows(
-                    //        titleAndAuthor,
-                    //        new Text(string.Join(", ", work.Fandoms)))
-                    //    ).Collapse();
-
-
                     var headerTable = new Grid();
                     headerTable.AddColumn();
                     headerTable.AddColumn();
                     headerTable.AddColumn();
-                    headerTable.AddColumn();
-                    
 
-                    var updatedText = Markup.FromInterpolated($"[gray]{work.Updated}[/]");
-                    var fandomsText = new Text(string.Join(", ", work.Fandoms));
+                    static string formatTagLink(string n) => $"[link=https://archiveofourown.org/tags/{Uri.EscapeDataString(n)}][yellow]{n}[/][/]";
 
-                    headerTable.AddRow(ratingSymbol, categorySymbol, titleAndAuthor, updatedText);
+                    var fandomsList = work.Fandoms.Select(n => formatTagLink(n));
+
+                    var fandomsText = new Markup(string.Join(", ", fandomsList));
+
+                    headerTable.AddRow(ratingSymbol, categorySymbol, workDetails);
                     headerTable.AddRow(warningSymbol, completedSymbol, fandomsText);
 
 
-                    var characterTagsList = work.Characters.Select(n => $"[yellow]{n}[/]");
-                    var freeformTagsList = work.FreeformTags.Select(n => $"[yellow]{n}[/]");
+                    var characterTagsList = work.Characters.Select(n => formatTagLink(n));
+                    var freeformTagsList = work.FreeformTags.Select(n => formatTagLink(n));
                     var tagsList = characterTagsList.Concat(freeformTagsList);
 
                     var tagsString = string.Join(", ", tagsList);
 
-                    // TODO:  Make sure to escape each tag.
                     var tags = new Markup(tagsString);
 
                     workTable.AddRow(headerTable);
@@ -279,7 +261,7 @@ namespace ao3.Commands
                     AnsiConsole.Write(workTable);
                 }
 
-            }); 
-            }
+            });
+        }
     }
 }

@@ -1,17 +1,12 @@
 ﻿using System.CommandLine;
-using System.Diagnostics.SymbolStore;
-using System.Net.WebSockets;
-using System.Text;
-using ao3.commands;
-using ao3.lib;
 using ao3.lib.search;
 using Spectre.Console;
 
-namespace ao3.Commands
+namespace ao3.client.commands.search
 {
     public class SearchAuthorCommand : Command
     {
-        public SearchAuthorCommand() : base("author", "Search for a author")
+        public SearchAuthorCommand(Option<int> pageOption) : base("author", "Search for a author")
         {
             var searchUserQuery = new Argument<string>(
                 name: "query",
@@ -27,9 +22,9 @@ namespace ao3.Commands
             { AllowMultipleArgumentsPerToken = true };
 
 
-            this.AddArgument(searchUserQuery);
-            this.AddOption(searchNamesOption);
-            this.AddOption(searchFandomsOption);
+            AddArgument(searchUserQuery);
+            AddOption(searchNamesOption);
+            AddOption(searchFandomsOption);
 
             // include arguments and options
 

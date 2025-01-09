@@ -1,14 +1,10 @@
 ﻿using System.CommandLine;
-using System.Diagnostics.SymbolStore;
-using System.Net.WebSockets;
-using System.Text;
 using ao3.commands;
 using ao3.lib;
-using ao3.lib.search;
 using ao3.lib.work;
 using Spectre.Console;
 
-namespace ao3.Commands
+namespace ao3.client.commands.info
 {
     public class InfoWorkCommand : Command
     {
@@ -19,7 +15,7 @@ namespace ao3.Commands
                 );
 
 
-            this.AddArgument(idArgument);
+            AddArgument(idArgument);
 
             // include arguments and options
 
@@ -29,7 +25,7 @@ namespace ao3.Commands
 
                 var work = await Work.ParseFromIdAsync(id);
 
- 
+
                 var ratingSymbol = Symbols.RatingSymbols[work.Rating];
 
                 var categorySymbol = work.Categories.Count() > 1 ? Symbols.CategorySymbols[Category.Multi] : Symbols.CategorySymbols[work.Categories.First()];

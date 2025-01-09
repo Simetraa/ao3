@@ -61,6 +61,11 @@ namespace ao3.lib.search
 
             var authorElements = document.QuerySelectorAll("ol.index .user");
 
+            if (authorElements.Length == 0)
+            {
+                return (0, 0, []);
+            }
+
             var (pageCount, authorCount) = ParseAuthorPageMeta(document);
 
             IEnumerable<AuthorMeta> authors = authorElements.Select(AuthorMeta.ParseFromMeta);
