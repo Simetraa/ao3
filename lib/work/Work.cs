@@ -112,7 +112,7 @@ namespace ao3.lib.work
             var charactersSelector = ".character .tag";
             var characters = document.QuerySelectorAll(charactersSelector).Select(t => t.TextContent).ToList();
 
-            var completed = totalChapters == chapters; // TODO: Is this always correct? There is no completed tag on full fics.
+            var completed = totalChapters == chapters;
 
             var textSelector = "#chapters";
             var text = document.QuerySelector(textSelector)!.TextContent;

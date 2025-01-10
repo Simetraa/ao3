@@ -197,10 +197,13 @@ namespace ao3.client.commands.search
 
                     var completedSymbol = work.Completed ? new Text("✓") : new Text("✘");
 
-                    var workUrl = $"https://archiveofourown.org/works/{work.Id}";
-                    var authorUrl = $"https://archiveofourown.org/users/{work.AuthorString}";
+                    var workUrl = $"https://archiveofourown.org/works/{work.Id}".EscapeMarkup();
+                    var authorUrl = $"https://archiveofourown.org/users/{work.AuthorString.Replace(" ", "_")}".EscapeMarkup();
 
-                    var workDetails = Markup.FromInterpolated($"[link={workUrl}][red]{work.Title}[/][/] by [link={authorUrl}][red]{work.AuthorString}[/][/] #{work.Id} [gray]{work.Updated}[/]");
+                    var authorString = work.AuthorString.EscapeMarkup();
+                    var titleString = work.Title.EscapeMarkup();
+
+                    var workDetails = Markup.FromInterpolated($"[link={workUrl}][red]{titleString}[/][/] by [link={authorUrl}][red][/]{authorString}[/] #{work.Id} [gray]{work.Updated}[/]");
 
                     var workTable = new Table();
                     workTable.Expand();
@@ -255,12 +258,11 @@ namespace ao3.client.commands.search
                         new Text($"Words: {work.Words:n0}"),
                         new Text($"Chapters: {work.CompletedChapters}/{work.TotalChapters?.ToString() ?? "?"}"),
                         new Text($"Kudos: {work.Kudos:n0}"),
-                        new Text($"Hits: {work.Hits:n0}")));
+                         new Text($"Hits: {work.Hits:n0}")));
 
 
                     AnsiConsole.Write(workTable);
                 }
-
             });
         }
     }

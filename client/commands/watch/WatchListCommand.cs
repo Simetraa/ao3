@@ -13,11 +13,11 @@ namespace ao3.client.commands.watch
 
             this.SetHandler((context) =>
             {
-                using var file = new FileStream("watch.dat", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                using var file = new FileStream("watch.dat", FileMode.OpenOrCreate, FileAccess.Read);
                 using var br = new BinaryReader(file);
                 using var bw = new BinaryWriter(file);
 
-                List<(int Id, long Updated, string Title, string Author, int CompletedChapters, int TotalChapters)> watchList = new();
+                List<(int Id, long Updated, string Title, string Author, int CompletedChapters, int TotalChapters)> watchList = [];
 
                 Console.WriteLine("Loading existing watch list");
 

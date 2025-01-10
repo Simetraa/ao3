@@ -54,7 +54,7 @@ namespace ao3.client.commands.watch
 
                 watchList.RemoveAt(workIndex);
 
-                file.SetLength(value: 0);
+                file.SetLength(0);  // Reset the contents of the file
                 file.Seek(0, SeekOrigin.Begin); // Reset the file position to the beginning
 
                 foreach (var (Id, Updated, Title, Author, CompletedChapters, TotalChapters) in watchList)

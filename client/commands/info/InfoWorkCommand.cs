@@ -49,8 +49,13 @@ namespace ao3.client.commands.info
 
                 var completedSymbol = work.Completed ? new Text("✓") : new Text("✘");
 
+                var workUrl = $"https://archiveofourown.org/works/{work.Id}".EscapeMarkup();
+                var authorUrl = $"https://archiveofourown.org/users/{work.AuthorString.Replace(" ", "_")}".EscapeMarkup();
 
-                var titleAndAuthor = Markup.FromInterpolated($"[red]{work.Title}[/] by [red]{work.AuthorString}[/]");
+                var authorString = work.AuthorString.EscapeMarkup();
+                var titleString = work.Title.EscapeMarkup();
+
+                var workDetails = Markup.FromInterpolated($"[link={workUrl}][red]{titleString}[/][/] by [link={authorUrl}][red][/]{authorString}[/] #{work.Id} [gray]{work.Updated}[/]");
 
                 var workTable = new Table();
                 workTable.Expand();
@@ -76,17 +81,22 @@ namespace ao3.client.commands.info
                 headerTable.AddColumn();
                 headerTable.AddColumn();
 
-                headerTable.AddRow(ratingSymbol, categorySymbol, titleAndAuthor);
-                headerTable.AddRow(warningSymbol, completedSymbol, new Text(string.Join(", ", work.Fandoms)));
+                static string formatTagLink(string n) => $"[link=https://archiveofourown.org/tags/{Uri.EscapeDataString(n)}][yellow]{n}[/][/]";
+
+                var fandomsList = work.Fandoms.Select(n => formatTagLink(n));
+
+                var fandomsText = new Markup(string.Join(", ", fandomsList));
+
+                headerTable.AddRow(ratingSymbol, categorySymbol, workDetails);
+                headerTable.AddRow(warningSymbol, completedSymbol, fandomsText);
 
 
-                var characterTagsList = work.Characters.Select(n => $"[yellow]{n}[/]");
-                var freeformTagsList = work.FreeformTags.Select(n => $"[yellow]{n}[/]");
+                var characterTagsList = work.Characters.Select(n => formatTagLink(n));
+                var freeformTagsList = work.FreeformTags.Select(n => formatTagLink(n));
                 var tagsList = characterTagsList.Concat(freeformTagsList);
 
                 var tagsString = string.Join(", ", tagsList);
 
-                // TODO:  Make sure to escape each tag.
                 var tags = new Markup(tagsString);
 
                 workTable.AddRow(headerTable);
@@ -100,7 +110,7 @@ namespace ao3.client.commands.info
                     new Text($"Words: {work.Words:n0}"),
                     new Text($"Chapters: {work.CompletedChapters}/{work.TotalChapters?.ToString() ?? "?"}"),
                     new Text($"Kudos: {work.Kudos:n0}"),
-                    new Text($"Hits: {work.Hits:n0}")));
+                     new Text($"Hits: {work.Hits:n0}")));
 
 
                 AnsiConsole.Write(workTable);

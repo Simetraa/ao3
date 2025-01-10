@@ -57,7 +57,8 @@ namespace ao3.client.commands.watch
                 var workTotalChapters = work.TotalChapters ?? -1;
 
                 watchList.Add((work.Id, workUpdatedBinary, work.Title, work.AuthorString, work.CompletedChapters, workTotalChapters));
-
+                
+                file.SetLength(0); // Reset the contents of the file
                 file.Seek(0, SeekOrigin.Begin); // Reset the file position to the beginning
 
                 foreach (var (Id, Updated, Title, Author, CompletedChapters, TotalChapters) in watchList)
