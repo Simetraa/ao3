@@ -2,28 +2,26 @@
 {
     public abstract class WorkBase(int id, string title, Rating rating, IEnumerable<Warning> archiveWarnings, IEnumerable<Category> categories, List<string> fandoms, List<string> relationships, List<string> characters, bool completed, string description, string authorString, List<string> freeformTags, string language, int words, int completedChapters, int? totalChapters, int kudos, int bookmarks, int hits)
     {
-
-
-        public int Id { get; } = id;
-        public string Title { get; } = title;
-        public Rating Rating { get; } = rating;
-        public IEnumerable<Warning> ArchiveWarnings { get; } = archiveWarnings;
-        public IEnumerable<Category> Categories { get; } = categories;
-        public List<string> Fandoms { get; } = fandoms;
-        public List<string> Relationships { get; } = relationships;
-        public List<string> Characters { get; } = characters;
-        public bool Completed { get; } = completed;
-        public string Description { get; } = description;
+        public int Id { get; private set; } = id;
+        public string Title { get; private set; } = title;
+        public Rating Rating { get; private set; } = rating;
+        public IEnumerable<Warning> ArchiveWarnings { get; private set; } = archiveWarnings;
+        public IEnumerable<Category> Categories { get; private set;  } = categories;
+        public IEnumerable<string> Fandoms { get; private set; } = fandoms;
+        public IEnumerable<string> Relationships { get; private set; } = relationships;
+        public IEnumerable<string> Characters { get; private set; } = characters;
+        public bool Completed { get; private set; } = completed;
+        public string Description { get; private set; } = description;
         // can there be multiple authors on a fic?
-        public string AuthorString { get; } = authorString;
-        public List<string> FreeformTags { get; } = freeformTags;
-        public string Language { get; } = language;
-        public int Words { get; } = words;
-        public int CompletedChapters { get; } = completedChapters;
-        public int? TotalChapters { get; } = totalChapters;
-        public int Kudos { get; } = kudos;
-        public int Bookmarks { get; } = bookmarks;
-        public int Hits { get; } = hits;
+        public string AuthorString { get; private set; } = authorString;
+        public IEnumerable<string> FreeformTags { get; private set; } = freeformTags;
+        public string Language { get; private set; } = language;
+        public int Words { get; private set; } = words;
+        public int CompletedChapters { get; private set; } = completedChapters;
+        public int? TotalChapters { get; private set; } = totalChapters;
+        public int Kudos { get; private set; } = kudos;
+        public int Bookmarks { get; private set;  } = bookmarks;
+        public int Hits { get; private set; } = hits;
 
         public async Task<string> Download(DownloadType downloadType, string outputFormat)
         {

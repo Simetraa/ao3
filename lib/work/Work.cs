@@ -4,22 +4,22 @@ using ao3.lib.author;
 
 namespace ao3.lib.work
 {
-    public class Work(int id, string title, string description, string author, string language, int completedChapters, int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed, DateOnly? updated, DateOnly published, Rating rating, IEnumerable<Warning> archiveWarnings, IEnumerable<Category> categories, List<string> fandoms, List<string> relationships, List<string> characters, List<string> tags, string? text) : WorkBase(id, title, rating, archiveWarnings, categories, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
+    public class Work(int id, string title, string description, string author, string language, int completedChapters,
+                      int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed,
+                      DateOnly? updated, DateOnly published, Rating rating, IEnumerable<Warning> archiveWarnings,
+                      IEnumerable<Category> categories, List<string> fandoms, List<string> relationships,
+                      List<string> characters, List<string> tags, string? text) : WorkBase(id, title, rating, archiveWarnings, categories, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
     {
-        public DateOnly? Updated { get; } = updated;
-
-        public DateOnly Published { get; } = published;
-
-        public string? Text { get; } = text;
+        public DateOnly? Updated { get; private set; } = updated;
+        public DateOnly Published { get; private set; } = published;
+        public string? Text { get; private set; } = text;
 
         public async Task<Author> GetAuthor()
         {
             return await Author.ParseAsync(AuthorString);
         }
 
-
-
-        public static Work ParseFromWork(AngleSharp.Dom.IDocument document)
+        private static Work ParseFromWork(AngleSharp.Dom.IDocument document)
         {
             var idSelector = ".download ul li a";
             var idEl = document.QuerySelector(idSelector);
@@ -98,9 +98,9 @@ namespace ao3.lib.work
                 .Select(t => Utils.WarningDict[t])
                 .ToList();
 
-            var categoriesSelector = ".category .tag";
-            var categoriesString = document.QuerySelector(categoriesSelector)!.TextContent;
-            var categories = categoriesString.Split(", ").Select(t => Utils.CategoryDict[t]).ToList();
+            var categoriesSelector = "dd.category .tag";
+            var categoriesEl = document.QuerySelectorAll(categoriesSelector);
+            var categories = categoriesEl.Select(t => Utils.CategoryDict[t.TextContent]).ToList();
 
             var fandomsSelector = ".fandom .tag";
             var fandoms = document.QuerySelectorAll(fandomsSelector).Select(t => t.TextContent).ToList();

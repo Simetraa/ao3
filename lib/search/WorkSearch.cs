@@ -153,7 +153,7 @@ namespace ao3.lib.search
             return url;
         }
 
-        public static (int pageCount, int workCount) ParseWorkPageMeta(IDocument document)
+        private static (int pageCount, int workCount) ParseWorkPageMeta(IDocument document)
         {
             var headingSelector = "ul + h3.heading";
             var heading = document.QuerySelector(headingSelector);

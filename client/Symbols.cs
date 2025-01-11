@@ -16,12 +16,13 @@ namespace ao3.commands
 
         public static readonly Dictionary<Category, Text> CategorySymbols = new()
         {
-            { Category.FF, new Text("♀️") },
+            { Category.FF, new ("♀️") },
             { Category.FM, new Text("⚥") },
             { Category.Gen, new Text("⊙") },
             { Category.MM, new Text("♂️") },
             { Category.Multi, new Text("M") },
             { Category.Other, new Text("♅") },
+            { Category.None, new Text(" ") }
         };
 
 

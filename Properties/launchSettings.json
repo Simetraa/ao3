@@ -2,7 +2,7 @@
   "profiles": {
     "ao3": {
       "commandName": "Project",
-      "commandLineArgs": "query --sort-by WordCount"
+      "commandLineArgs": "work info "
     }
   }
 }

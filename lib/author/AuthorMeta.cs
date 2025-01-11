@@ -4,11 +4,11 @@ namespace ao3.lib.author
 {
     public class AuthorMeta(string name, string? pseud, string? avatarUrl, int bookmarks, int works) : AuthorBase(name)
     {
-        public string? Pseud { get; } = pseud;
-        string AvatarUrl { get; } = avatarUrl;
-        public int Bookmarks { get; } = bookmarks;
+        public string? Pseud { get; private set; } = pseud;
+        public string? AvatarUrl { get; private set; } = avatarUrl;
+        public int Bookmarks { get; private set; } = bookmarks;
 
-        public int Works { get; } = works;
+        public int Works { get; private set; } = works;
 
         public static AuthorMeta ParseFromMeta(IElement html)
         {

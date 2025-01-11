@@ -16,7 +16,6 @@ namespace ao3
         static async Task Main(string[] args)
         {
             System.Console.OutputEncoding = Encoding.UTF8;
-            args = ["info", "work", "14476725"];
 
             var rootCommand = new RootCommand();
 

@@ -7,15 +7,15 @@ namespace ao3.lib.author
 {
     public class Author(string id, string name, string dateJoined, string? location, DateOnly? birthday, string[] pseuds, string? bio, string avatarUrl) : AuthorBase(name)
     {
-        public string Id { get; } = id;
-        public string AvatarUrl { get; } = avatarUrl;
-        public string DateJoined { get; } = dateJoined;
-        public string? Location { get; } = location;
-        public DateOnly? Birthday { get; } = birthday;
+        public string Id { get; private set; } = id;
+        public string AvatarUrl { get; private set; } = avatarUrl;
+        public string DateJoined { get; private set; } = dateJoined;
+        public string? Location { get; private set; } = location;
+        public DateOnly? Birthday { get; private set; } = birthday;
 
-        public string[] Pseuds { get; } = pseuds;
+        public string[] Pseuds { get; private set; } = pseuds;
 
-        public string? Bio { get; } = bio;
+        public string? Bio { get; private set; } = bio;
 
 
         public static async Task<Author> ParseAsync(string name)

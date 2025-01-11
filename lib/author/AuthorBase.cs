@@ -2,7 +2,7 @@
 {
     public class AuthorBase(string name)
     {
-        public string Name { get; } = name;
+        public string Name { get; private set; } = name;
 
 
         public async Task<Author> ToAuthor()
