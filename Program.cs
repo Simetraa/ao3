@@ -6,6 +6,7 @@ using ao3.client.commands.download;
 using ao3.client.commands.watch;
 using ao3.client.commands.info;
 using ao3.client.commands.search;
+using ao3.lib.work;
 
 //using System.Globalization;
 
@@ -17,8 +18,7 @@ namespace ao3
         {
             System.Console.OutputEncoding = Encoding.UTF8;
 
-            args = ["info", "author", "ChipAndDealdsadaser"];
-
+            //args = ["search", "work", "S", "--page", "50020"];
             var rootCommand = new RootCommand();
 
             // search

@@ -1,6 +1,7 @@
 ﻿using System.CommandLine;
 using System.Text;
 using ao3.lib.author;
+using ao3.lib.exceptions;
 using Spectre.Console;
 
 namespace ao3.client.commands.info
@@ -31,7 +32,7 @@ namespace ao3.client.commands.info
 
                 try
                 {
-                    var author = await Author.ParseAsync(name);
+                    var author = await Author.ParseFromName(name);
 
                     if (hideAvatar)
                     {
@@ -77,10 +78,9 @@ namespace ao3.client.commands.info
 
                         AnsiConsole.Write(grid);
                     }
-                } catch(Exception e)
+                } catch (Exception e)
                 {
                     AnsiConsole.WriteException(e);
-                    return;
                 }
             });
         }

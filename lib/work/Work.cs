@@ -1,6 +1,7 @@
 ﻿using System.Reflection.Metadata;
 using AngleSharp;
 using ao3.lib.author;
+using ao3.lib.exceptions;
 
 namespace ao3.lib.work
 {
@@ -16,13 +17,18 @@ namespace ao3.lib.work
 
         public async Task<Author> GetAuthor()
         {
-            return await Author.ParseAsync(AuthorString);
+            return await Author.ParseFromName(AuthorString);
         }
 
-        private static Work ParseFromWork(AngleSharp.Dom.IDocument document)
+        public static Work ParseFromWork(AngleSharp.Dom.IDocument document)
         {
+            if (document.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new WorkNotFoundException();
+            }
+
             var idSelector = ".download ul li a";
-            var idEl = document.QuerySelector(idSelector);
+            var idEl = document.QuerySelector(idSelector)!;
             var idString = idEl.GetAttribute("href")!;
             var id = Utils.ParseNumber(idString.Split("/")[2]);
 

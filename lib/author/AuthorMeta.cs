@@ -12,7 +12,7 @@ namespace ao3.lib.author
 
         public static AuthorMeta ParseFromMeta(IElement html)
         {
-            var nameDivSelector = ".user h4";
+            var nameDivSelector = ".user h4 a";
             var name = html.QuerySelector(nameDivSelector)!.TextContent;
 
 
@@ -31,7 +31,7 @@ namespace ao3.lib.author
             var avatarSelector = ".user img";
             var url = html.QuerySelector(avatarSelector)?.GetAttribute("src");
 
-            var bookmarksAndWorksSelector = ".user h5 a";
+            var bookmarksAndWorksSelector = ".user h5";
             var bookmarksAndWorksString = html.QuerySelector(bookmarksAndWorksSelector)?.TextContent ?? "0 works, 0 bookmarks";
 
             parts = bookmarksAndWorksString.Split(",");

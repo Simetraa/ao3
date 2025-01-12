@@ -11,7 +11,7 @@ namespace ao3.client.commands.search
     {
         public SearchAuthorCommand(Option<int> pageOption) : base("author", "Search for a author")
         {
-            var searchUserQuery = new Argument<string>(
+            var searchAuthorQuery = new Argument<string>(
                 name: "query",
                 description: "Searches all the fields associated with a user in the database.");
             var searchNamesOption = new Option<IEnumerable<string>>(
@@ -25,7 +25,7 @@ namespace ao3.client.commands.search
             { AllowMultipleArgumentsPerToken = true };
 
 
-            AddArgument(searchUserQuery);
+            AddArgument(searchAuthorQuery);
             AddOption(searchNamesOption);
             AddOption(searchFandomsOption);
 
@@ -33,17 +33,16 @@ namespace ao3.client.commands.search
 
             this.SetHandler(async (context) =>
             {
-                var query = context.ParseResult.GetValueForArgument(searchUserQuery);
+                var query = context.ParseResult.GetValueForArgument(searchAuthorQuery);
                 var names = context.ParseResult.GetValueForOption(searchNamesOption);
                 var fandoms = context.ParseResult.GetValueForOption(searchFandomsOption);
                 var page = context.ParseResult.GetValueForOption(pageOption);
                 try
                 {
-                    var userQuery = new AuthorSearch(query, names, fandoms);
+                    var authorQuery = new AuthorSearch(query, names, fandoms);
+                    var authorQueryUrl = authorQuery.GenerateSearchQuery();
 
-                    Console.WriteLine(userQuery.GenerateSearchQuery());
-
-                    var (pageCount, authorCount, authors) = await userQuery.Search(page);
+                    var (pageCount, authorCount, authors) = await authorQuery.Search(page);
                     var authorTable = new Table();
                     authorTable.Expand();
                     authorTable.AddColumn("Name");
@@ -57,7 +56,7 @@ namespace ao3.client.commands.search
                     }
 
                     AnsiConsole.Write(authorTable);
-                    AnsiConsole.Write(new PageWidget<AuthorMeta>(page, pageCount, authorCount, authors).Render());
+                    AnsiConsole.Write(new PageWidget<AuthorMeta>(page, pageCount, authorCount, authors, authorQueryUrl).Render());
                 }
                 catch (Exception e)
                 {

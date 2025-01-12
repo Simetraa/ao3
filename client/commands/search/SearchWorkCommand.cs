@@ -172,7 +172,7 @@ namespace ao3.client.commands.search
                 {
                     var searchQuery = new WorkSearch(query, title, author, date, complete, crossovers, singleChapter, language, fandoms, ratings, warnings, categories, characters, relationships, additionalTags, minWords, maxWords, minHits, maxHits, minKudos, maxKudos, minComments, maxComments, minBookmarks, maxBookmarks, sortBy, sortOrder);
 
-                    Console.WriteLine(searchQuery.GenerateSearchQuery());
+                    var workQueryUrl = searchQuery.GenerateSearchQuery();
 
                     var (pageCount, workCount, works) = await searchQuery.Search(page);
 
@@ -184,7 +184,7 @@ namespace ao3.client.commands.search
                         AnsiConsole.Write(workWidget.Render());
                     }
 
-                    AnsiConsole.Write(new PageWidget<WorkMeta>(page, pageCount, workCount, works).Render());
+                    AnsiConsole.Write(new PageWidget<WorkMeta>(page, pageCount, workCount, works, workQueryUrl).Render());
                 }
                 catch (Exception e)
                 {

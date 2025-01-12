@@ -33,7 +33,7 @@ namespace ao3.client.commands.download
                         ProgressTask? task = ctx.AddTask("[green]Downloading author...[/]").MaxValue(1);
                         while (!ctx.IsFinished)
                         {
-                            var author = await Author.ParseAsync(name);
+                            var author = await Author.ParseFromName(name);
                             var (pageCount, _, _) = await author.GetWorks(); // get page count
 
                             var pageTask = ctx.AddTask($"[red]Downloading pages...[/]").MaxValue(pageCount);

@@ -2,6 +2,7 @@
 using ao3.client.widgets;
 using ao3.commands;
 using ao3.lib;
+using ao3.lib.exceptions;
 using ao3.lib.work;
 using Spectre.Console;
 
@@ -32,7 +33,7 @@ namespace ao3.client.commands.info
                 } catch (Exception e)
                 {
                     AnsiConsole.WriteException(e);
-                }
+                } 
             }
             );
         }

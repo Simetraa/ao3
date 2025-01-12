@@ -96,7 +96,7 @@ namespace ao3.client.widgets
             workTable.AddRow(new Rule("[red]Tags[/]"));
             workTable.AddRow(tags);
             workTable.AddRow(new Rule("[red]Description[/]"));
-            workTable.AddRow(Work.Description);
+            workTable.AddRow(Work.Description.EscapeMarkup());
             workTable.AddRow(new Rule("[red]Stats[/]"));
             workTable.AddRow(new Columns(
                 new Text($"Language: {Work.Language}"),

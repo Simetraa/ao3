@@ -7,7 +7,7 @@
 
         public async Task<Author> ToAuthor()
         {
-            return await Author.ParseAsync(Name);
+            return await Author.ParseFromName(Name);
         }
     }
 

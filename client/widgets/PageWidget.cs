@@ -7,13 +7,13 @@ using Spectre.Console;
 
 namespace ao3.client.widgets
 {
-    public class PageWidget<T>(int currentPage, int totalPages, int totalItems, IEnumerable<T> page)
+    public class PageWidget<T>(int currentPage, int totalPages, int totalItems, IEnumerable<T> page, string searchUrl)
     {
         public Rule Render()
         {
-            var rule = new Rule();
+
+            var rule = new Rule($"[link={searchUrl}]Open in browser[/] | [red]{totalItems:n0}[/] found | Page [red]{currentPage:n0}[/] of [red]{totalPages:n0}[/] | Showing [red]{page.Count():n0}[/] items");
             rule.Justification = Justify.Right;
-            rule.Title = $"{totalItems} found | Page {currentPage} of {totalPages} | Showing {page.Count()} items";
 
             return rule;
         }

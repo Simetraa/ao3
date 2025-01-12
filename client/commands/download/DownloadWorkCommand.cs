@@ -43,7 +43,7 @@ namespace ao3.client.commands.download
                             {
                                 var work = await Work.ParseFromIdAsync(id);
                                 task.Increment(.5);
-                                await work.Download(format, output);
+                                await work.Download(format, output!);
                                 task.Increment(.5);
 
                             });
