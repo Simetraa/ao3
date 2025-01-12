@@ -15,8 +15,6 @@ namespace ao3.client.commands.download
 
             AddArgument(nameArgument);
 
-            // include arguments and options
-
             this.SetHandler(async (context) =>
             {
                 var name = context.ParseResult.GetValueForArgument(nameArgument);
@@ -36,17 +34,16 @@ namespace ao3.client.commands.download
                         while (!ctx.IsFinished)
                         {
                             var author = await Author.ParseAsync(name);
-                            var (pageCount, workCount, works) = await author.GetWorks();
+                            var (pageCount, _, _) = await author.GetWorks(); // get page count
 
-
-                            var pageTask = ctx.AddTask($"[red]Downloading page...[/]").MaxValue(pageCount);
+                            var pageTask = ctx.AddTask($"[red]Downloading pages...[/]").MaxValue(pageCount);
 
                             // for each page
-                            await Parallel.ForAsync(0, pageCount, options, async (work, token2) =>
+                            await Parallel.ForAsync(1, pageCount, options, async (workIndex, token2) =>
                             {
-                                var (pageCount, workCount, works) = await author.GetWorks();
+                                var (pageCount, workCount, works) = await author.GetWorks(workIndex); // download current page
                                 pageTask.Increment(1);
-                                var workTask = ctx.AddTask($"[blue]Downloading work...[/]").MaxValue(works.Count());
+                                var workTask = ctx.AddTask($"[blue]Downloading works...[/]").MaxValue(works.Count());
                                 // for each book
                                 await Parallel.ForEachAsync(works, options, async (work, token3) =>
                                 {

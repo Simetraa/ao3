@@ -1,4 +1,5 @@
 ﻿using System.CommandLine;
+using System.Text;
 using ao3.lib.author;
 using Spectre.Console;
 
@@ -28,55 +29,59 @@ namespace ao3.client.commands.info
                 var name = context.ParseResult.GetValueForArgument(nameArgument);
                 var hideAvatar = context.ParseResult.GetValueForOption(avatarOption);
 
-                var author = await Author.ParseAsync(name);
-
-
-                if (hideAvatar)
+                try
                 {
-                    var grid = new Table();
-                    grid.HideHeaders();
-                    grid.AddColumn("");
-                    var panel = new Rows(
-                                          Markup.FromInterpolated($"Name: {author.Name}"),
-                                          Markup.FromInterpolated($"Pseuds: {string.Join(", ", author.Pseuds)}"),
-                                          Markup.FromInterpolated($"Join Date: {author.DateJoined}"),
-                                          Markup.FromInterpolated($"ID: {author.Id}"),
-                                          Markup.FromInterpolated($"Location: {author.Location}"),
-                                          new Rule("[red]Bio[/]"),
-                                          new Text(author.Bio ?? ""));
+                    var author = await Author.ParseAsync(name);
 
-                    grid.AddRow(panel);
+                    if (hideAvatar)
+                    {
+                        var grid = new Table();
+                        grid.HideHeaders();
+                        grid.AddColumn("");
+                        var panel = new Rows(
+                                              Markup.FromInterpolated($"Name: {author.Name}"),
+                                              Markup.FromInterpolated($"Pseuds: {string.Join(", ", author.Pseuds)}"),
+                                              Markup.FromInterpolated($"Join Date: {author.DateJoined}"),
+                                              Markup.FromInterpolated($"ID: {author.Id}"),
+                                              Markup.FromInterpolated($"Location: {author.Location}"),
+                                              new Rule("[red]Bio[/]"),
+                                              new Text(author.Bio ?? ""));
 
-                    AnsiConsole.Write(grid);
+                        grid.AddRow(panel);
 
-                }
-                else
+                        AnsiConsole.Write(grid);
+
+                    }
+                    else
+                    {
+                        var grid = new Table();
+                        grid.HideHeaders();
+                        grid.AddColumn("");
+                        grid.AddColumn("");
+
+                        var image = new CanvasImage(await author.DownloadAvatar());
+                        image.MaxWidth(16);
+
+                        var panel = new Rows(
+                                              Markup.FromInterpolated($"Name: {author.Name}"),
+                                              Markup.FromInterpolated($"Pseuds: {string.Join(", ", author.Pseuds)}"),
+                                              Markup.FromInterpolated($"Join Date: {author.DateJoined}"),
+                                              Markup.FromInterpolated($"ID: {author.Id}"),
+                                              Markup.FromInterpolated($"Location: {author.Location}"),
+                                              new Rule("[red]Bio[/]"),
+                                              new Text(author.Bio ?? "")
+                                              );
+
+
+                        grid.AddRow(image, panel);
+
+                        AnsiConsole.Write(grid);
+                    }
+                } catch(Exception e)
                 {
-                    var grid = new Table();
-                    grid.HideHeaders();
-                    grid.AddColumn("");
-                    grid.AddColumn("");
-
-                    var image = new CanvasImage(await author.DownloadAvatar());
-                    image.MaxWidth(16);
-
-                    var panel = new Rows(
-                                          Markup.FromInterpolated($"Name: {author.Name}"),
-                                          Markup.FromInterpolated($"Pseuds: {string.Join(", ", author.Pseuds)}"),
-                                          Markup.FromInterpolated($"Join Date: {author.DateJoined}"),
-                                          Markup.FromInterpolated($"ID: {author.Id}"),
-                                          Markup.FromInterpolated($"Location: {author.Location}"),
-                                          new Rule("[red]Bio[/]"),
-                                          new Text(author.Bio)
-                                          );
-
-
-                    grid.AddRow(image, panel);
-
-                    AnsiConsole.Write(grid);
+                    AnsiConsole.WriteException(e);
+                    return;
                 }
-
-
             });
         }
     }

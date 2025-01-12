@@ -31,12 +31,12 @@ namespace ao3.lib.search
             return url;
         }
 
-        public static (int pageCount, int authorCount) ParseAuthorPageMeta(IDocument document)
+        private static (int pageCount, int authorCount) ParseAuthorPageMeta(IDocument document)
         {
             var headingSelector = "p>strong";
             var heading = document.QuerySelector(headingSelector);
             var headingText = heading.TextContent;
-            var headingRegex = new System.Text.RegularExpressions.Regex("([\\d,]+) Found"); // TODO: Make this more robust
+            var headingRegex = new System.Text.RegularExpressions.Regex("([\\d,]+) Found");
             var match = headingRegex.Match(headingText);
             var authorCountString = match.Groups[1].Value;
             var authorCount = Utils.ParseNumber(authorCountString);

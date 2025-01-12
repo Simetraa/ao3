@@ -68,6 +68,6 @@
         MM = 23,
         Multi = 2246,
         Other = 24,
-        None = 0,
+        None = 2247,
     }
 }

@@ -5,9 +5,9 @@ using ao3.commands;
 
 namespace ao3.client.widgets
 {
-    public class WorkWidget(Work work)
+    public class WorkWidget(WorkMeta work)
     {
-        public Work Work { get; private set; } = work;
+        public WorkMeta Work { get; private set; } = work;
         public Table Render()
         {
             var ratingSymbol = Symbols.RatingSymbols[Work.Rating];

@@ -17,6 +17,8 @@ namespace ao3
         {
             System.Console.OutputEncoding = Encoding.UTF8;
 
+            args = ["info", "author", "ChipAndDealdsadaser"];
+
             var rootCommand = new RootCommand();
 
             // search

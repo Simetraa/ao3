@@ -27,8 +27,6 @@ namespace ao3.client.commands.download
                 //first download the Work data concurrently, using thread count
                 // then, get the download urls using the Work.Download() method.
 
-                //Console.WriteLine(value: $"{idList} ${threads} ${format}-");
-
                 ParallelOptions options = new()
                 {
                     MaxDegreeOfParallelism = threads
@@ -51,10 +49,6 @@ namespace ao3.client.commands.download
                             });
                         }
                     });
-
-
-
-                Console.Write($"Downloading {idList.Count()} works with {threads} threads in {format} format");
             });
         }
     }

@@ -7,8 +7,8 @@ namespace ao3.lib.work
     public class Work(int id, string title, string description, string author, string language, int completedChapters,
                       int? totalChapters, int words, int kudos, int bookmarks, int hits, bool completed,
                       DateOnly? updated, DateOnly published, Rating rating, IEnumerable<Warning> archiveWarnings,
-                      IEnumerable<Category> categories, List<string> fandoms, List<string> relationships,
-                      List<string> characters, List<string> tags, string? text) : WorkBase(id, title, rating, archiveWarnings, categories, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
+                      IEnumerable<Category> categories, IEnumerable<string> fandoms, IEnumerable<string> relationships,
+                      IEnumerable<string> characters, IEnumerable<string> tags, string? text) : WorkBase(id, title, rating, archiveWarnings, categories, fandoms, relationships, characters, completed, description, author, tags, language, words, completedChapters, totalChapters, kudos, bookmarks, hits)
     {
         public DateOnly? Updated { get; private set; } = updated;
         public DateOnly Published { get; private set; } = published;
@@ -130,6 +130,11 @@ namespace ao3.lib.work
             var document = await context.OpenAsync(address);
 
             return ParseFromWork(document);
+        }
+
+        public WorkMeta ToWorkMeta()
+        {
+            return new WorkMeta(Id, Title, Description, AuthorString, Language, CompletedChapters, TotalChapters, Updated ?? Published, Words, Kudos, Bookmarks, Hits, Completed, Rating, ArchiveWarnings, Categories, Fandoms, Relationships, Characters, FreeformTags);
         }
     }
 

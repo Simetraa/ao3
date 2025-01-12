@@ -56,9 +56,9 @@ namespace ao3.lib.author
             
             var bio = string.Join("\n", bioParagraphs);
 
-
             var avatarSelector = ".icon img";
             var url = document.QuerySelector(avatarSelector)!.GetAttribute("src")!;
+
 
             return new Author(id, name, dateJoined, location, birthday, pseuds, bio, url);
         }

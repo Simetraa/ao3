@@ -23,12 +23,18 @@ namespace ao3.client.commands.info
             this.SetHandler(async (context) =>
             {
                 var id = context.ParseResult.GetValueForArgument(idArgument);
+                try
+                {
+                    var work = await Work.ParseFromIdAsync(id);
+                    var workWidget = new WorkWidget(work.ToWorkMeta());
 
-                var work = await Work.ParseFromIdAsync(id);
-                var workWidget = new WorkWidget(work);
-
-                AnsiConsole.Write(workWidget.Render());
-            });
+                    AnsiConsole.Write(workWidget.Render());
+                } catch (Exception e)
+                {
+                    AnsiConsole.WriteException(e);
+                }
+            }
+            );
         }
     }
 }

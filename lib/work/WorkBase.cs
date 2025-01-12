@@ -1,6 +1,6 @@
 ﻿namespace ao3.lib.work
 {
-    public abstract class WorkBase(int id, string title, Rating rating, IEnumerable<Warning> archiveWarnings, IEnumerable<Category> categories, List<string> fandoms, List<string> relationships, List<string> characters, bool completed, string description, string authorString, List<string> freeformTags, string language, int words, int completedChapters, int? totalChapters, int kudos, int bookmarks, int hits)
+    public abstract class WorkBase(int id, string title, Rating rating, IEnumerable<Warning> archiveWarnings, IEnumerable<Category> categories, IEnumerable<string> fandoms, IEnumerable<string> relationships, IEnumerable<string> characters, bool completed, string description, string authorString, IEnumerable<string> freeformTags, string language, int words, int completedChapters, int? totalChapters, int kudos, int bookmarks, int hits)
     {
         public int Id { get; private set; } = id;
         public string Title { get; private set; } = title;
@@ -53,7 +53,6 @@
             using var res = await client.GetAsync($"https://download.archiveofourown.org/downloads/{Id}/fic.{fileType}");
 
             var fileName = res.Content.Headers.ContentDisposition!.FileName!;
-            Console.WriteLine($"Default filename: {fileName}");
             fileName = fileName[1..^1]; // remove quotation marks around filename
             var fileExtension = Path.GetExtension(fileName)[1..]; // remove leading dot
             fileName = outputFormat.Replace("%title%", Title)
@@ -69,8 +68,6 @@
             }
 
 
-
-            Console.WriteLine("Downloading to:" + fileName);
             using (var fs = new FileStream(fileName, FileMode.Create))
             {
                 await res.Content.CopyToAsync(fs);

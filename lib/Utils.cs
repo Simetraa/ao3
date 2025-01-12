@@ -76,7 +76,7 @@ namespace ao3.lib
 
             if (min == max)
             {
-                return min.ToString();
+                return min.ToString()!;
             }
             else if (min == null)
             {
