@@ -1,7 +1,7 @@
 ﻿using ao3.lib;
 using Spectre.Console;
 
-namespace ao3.commands
+namespace ao3.client
 {
     internal class Symbols
     {

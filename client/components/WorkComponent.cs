@@ -1,7 +1,6 @@
 ﻿using ao3.lib.work;
 using ao3.lib;
 using Spectre.Console;
-using ao3.commands;
 
 namespace ao3.client.widgets
 {
