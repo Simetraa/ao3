@@ -1,6 +1,6 @@
 ﻿using Spectre.Console;
 
-namespace ao3.client.widgets
+namespace ao3.client.components
 {
     public class PageComponent<T>(int currentPage, int totalPages, int totalItems, IEnumerable<T> page, string searchUrl)
     {

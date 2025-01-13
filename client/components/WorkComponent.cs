@@ -2,7 +2,7 @@
 using ao3.lib;
 using Spectre.Console;
 
-namespace ao3.client.widgets
+namespace ao3.client.components
 {
     public class WorkComponent(WorkMeta work)
     {
