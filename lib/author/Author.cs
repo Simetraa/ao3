@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata;
-using AngleSharp;
+﻿using AngleSharp;
 using AngleSharp.Dom;
 using ao3.lib.exceptions;
 using ao3.lib.search;

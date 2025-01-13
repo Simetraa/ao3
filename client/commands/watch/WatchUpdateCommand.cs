@@ -1,5 +1,4 @@
 ﻿using System.CommandLine;
-using ao3.lib.search;
 using ao3.lib.work;
 using Spectre.Console;
 
@@ -7,7 +6,7 @@ namespace ao3.client.commands.watch
 {
     public class WatchUpdateCommand : Command
     {
-        public WatchUpdateCommand() : base("list", "List and update watched works")
+        public WatchUpdateCommand() : base("update", "List and update watched works")
         {
             // include arguments and options
 

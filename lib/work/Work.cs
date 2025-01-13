@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata;
-using AngleSharp;
+﻿using AngleSharp;
 using ao3.lib.author;
 using ao3.lib.exceptions;
 

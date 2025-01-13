@@ -1,7 +1,5 @@
 ﻿using System.CommandLine;
-using System.Text;
 using ao3.lib.author;
-using ao3.lib.exceptions;
 using Spectre.Console;
 
 namespace ao3.client.commands.info

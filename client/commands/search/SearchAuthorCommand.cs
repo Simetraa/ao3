@@ -2,7 +2,6 @@
 using ao3.client.widgets;
 using ao3.lib.author;
 using ao3.lib.search;
-using ao3.lib.work;
 using Spectre.Console;
 
 namespace ao3.client.commands.search

@@ -1,6 +1,4 @@
 ﻿using System.CommandLine;
-using ao3.lib.search;
-using ao3.lib.work;
 using Spectre.Console;
 
 namespace ao3.client.commands.watch
@@ -13,7 +11,7 @@ namespace ao3.client.commands.watch
 
             this.SetHandler((context) =>
             {
-                using var file = new FileStream("watch.dat", FileMode.OpenOrCreate, FileAccess.Read);
+                using var file = new FileStream("watch.dat", FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 using var br = new BinaryReader(file);
                 using var bw = new BinaryWriter(file);
 

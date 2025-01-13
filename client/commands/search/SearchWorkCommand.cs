@@ -1,13 +1,9 @@
 ﻿using System.CommandLine;
-using System.Reflection.Metadata.Ecma335;
-using System.Web;
 using ao3.client.widgets;
-using ao3.commands;
 using ao3.lib;
 using ao3.lib.search;
 using ao3.lib.work;
 using Spectre.Console;
-using static System.Net.WebRequestMethods;
 
 namespace ao3.client.commands.search
 {

@@ -1,8 +1,6 @@
 ﻿using AngleSharp.Dom;
 using AngleSharp;
 using ao3.lib.author;
-using ao3.lib.work;
-using System.Collections.Generic;
 
 namespace ao3Tests.lib.author
 {

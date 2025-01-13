@@ -1,10 +1,4 @@
 ﻿using ao3.lib.autocomplete;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ao3Tests.lib.autocomplete
 {

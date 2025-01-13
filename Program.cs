@@ -1,14 +1,10 @@
 ﻿using System.CommandLine;
 using ao3.lib;
 using System.Text;
-using ao3.client.commands;
 using ao3.client.commands.download;
 using ao3.client.commands.watch;
 using ao3.client.commands.info;
 using ao3.client.commands.search;
-using ao3.lib.work;
-
-//using System.Globalization;
 
 namespace ao3
 {
@@ -18,7 +14,7 @@ namespace ao3
         {
             System.Console.OutputEncoding = Encoding.UTF8;
 
-            //args = ["search", "work", "S", "--page", "50020"];
+            //args = ["watch", "remove", "62104588"];
             var rootCommand = new RootCommand();
 
             // search
@@ -69,6 +65,7 @@ namespace ao3
             var watchCommand = new Command("watch", "Watch works from AO3");
             watchCommand.AddCommand(new WatchAddCommand());
             watchCommand.AddCommand(new WatchListCommand());
+            watchCommand.AddCommand(new WatchUpdateCommand());
             watchCommand.AddCommand(new WatchRemoveCommand());
 
 
@@ -78,8 +75,6 @@ namespace ao3
             rootCommand.AddCommand(watchCommand);
 
             await rootCommand.InvokeAsync(args);
-            //Console.WriteLine(string.Join(", ", Autocomplete.AutocompleteAsync("hi").Result));
         }
-
     }
 }

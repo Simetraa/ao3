@@ -1,7 +1,5 @@
 ﻿using System.CommandLine;
-using ao3.lib.search;
 using ao3.lib.work;
-using Spectre.Console;
 
 namespace ao3.client.commands.watch
 {

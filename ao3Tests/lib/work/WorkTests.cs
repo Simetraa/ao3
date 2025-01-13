@@ -1,5 +1,4 @@
-﻿using AngleSharp.Dom;
-using AngleSharp;
+﻿using AngleSharp;
 using ao3.lib;
 using ao3.lib.work;
 
