@@ -19,8 +19,6 @@ namespace ao3Tests.lib.work
 
             var work = WorkMeta.ParseFromMeta(workElement);
             Assert.AreEqual("NiallWrites", work.AuthorString);
-            //Assert.AreEqual(new DateOnly(2021, 6, 29), work.Updated);
-            //Assert.AreEqual(null, work.Published);
             CollectionAssert.AreEqual(new List<string> { "Fullmetal Alchemist: Brotherhood & Manga" }, work.Fandoms.ToList());
             CollectionAssert.AreEqual(new List<string> { "Lan Fan/Ling Yao" }, work.Relationships.ToList());
             CollectionAssert.AreEqual(new List<string> { "Lan Fan (Fullmetal Alchemist)", "Ling Yao", }, work.Characters.ToList());

@@ -27,7 +27,7 @@ namespace ao3.commands
 
 
         public static readonly Dictionary<CompletionStatus, Text> CompletionDictionary = new()
-                {
+        {
             { CompletionStatus.All, new Text(" ") },
             { CompletionStatus.Complete, new Text("✓") },
             { CompletionStatus.InProgress, new Text("🛇") }

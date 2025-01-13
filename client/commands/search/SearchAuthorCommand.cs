@@ -55,7 +55,7 @@ namespace ao3.client.commands.search
                     }
 
                     AnsiConsole.Write(authorTable);
-                    AnsiConsole.Write(new PageWidget<AuthorMeta>(page, pageCount, authorCount, authors, authorQueryUrl).Render());
+                    AnsiConsole.Write(new PageComponent<AuthorMeta>(page, pageCount, authorCount, authors, authorQueryUrl).Render());
                 }
                 catch (Exception e)
                 {

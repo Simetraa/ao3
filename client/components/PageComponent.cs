@@ -2,7 +2,7 @@
 
 namespace ao3.client.widgets
 {
-    public class PageWidget<T>(int currentPage, int totalPages, int totalItems, IEnumerable<T> page, string searchUrl)
+    public class PageComponent<T>(int currentPage, int totalPages, int totalItems, IEnumerable<T> page, string searchUrl)
     {
         public Rule Render()
         {

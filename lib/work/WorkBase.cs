@@ -50,23 +50,32 @@
                     throw new ArgumentException("Invalid download type");
             }
 
+            static string makeSafeFileName(string fileName)
+            {
+                foreach (var c in Path.GetInvalidFileNameChars())
+                {
+                    fileName = fileName.Replace(c, '-');
+                }
+                return fileName;
+            }
+
             using var res = await client.GetAsync($"https://download.archiveofourown.org/downloads/{Id}/fic.{fileType}");
 
             var fileName = res.Content.Headers.ContentDisposition!.FileName!;
             fileName = fileName[1..^1]; // remove quotation marks around filename
             var fileExtension = Path.GetExtension(fileName)[1..]; // remove leading dot
-            fileName = outputFormat.Replace("%title%", Title)
-                                   .Replace("%author%", AuthorString)
+            fileName = outputFormat.Replace("%title%", makeSafeFileName(Title))
+                                   .Replace("%author%", makeSafeFileName(AuthorString))
                                    .Replace("%id%", Id.ToString())
                                    .Replace("%language%", Language)
                                    .Replace("%words%", Words.ToString())
                                    .Replace("%ext%", fileExtension);
 
-            foreach (var c in Path.GetInvalidFileNameChars())
+            FileInfo fileInfo = new(fileName);
+            if (fileInfo.Directory != null)
             {
-                fileName = fileName.Replace(c, '-');
+                if (!fileInfo.Directory.Exists) fileInfo.Directory.Create();
             }
-
 
             using (var fs = new FileStream(fileName, FileMode.Create))
             {

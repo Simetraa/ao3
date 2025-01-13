@@ -5,7 +5,7 @@ using ao3.commands;
 
 namespace ao3.client.widgets
 {
-    public class WorkWidget(WorkMeta work)
+    public class WorkComponent(WorkMeta work)
     {
         public WorkMeta Work { get; private set; } = work;
         public Table Render()
@@ -48,7 +48,7 @@ namespace ao3.client.widgets
 
             var authorString = Work.AuthorString.EscapeMarkup();
             var titleString = Work.Title.EscapeMarkup();
-            var workDetails = Markup.FromInterpolated($"[link={workUrl}][red]{titleString}[/][/] by [link={authorUrl}][red][/]{authorString}[/] #{Work.Id} [gray]{Work.Updated}[/]");
+            var workDetails = Markup.FromInterpolated($"[link={workUrl}][red]{titleString}[/][/] by [link={authorUrl}][red][/]{authorString}[/] | [bold red3]ID: {Work.Id}[/] | [gray]Updated: {Work.Updated}[/]");
 
             var workTable = new Table();
             workTable.Expand();

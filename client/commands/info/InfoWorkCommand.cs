@@ -24,9 +24,9 @@ namespace ao3.client.commands.info
                 try
                 {
                     var work = await Work.ParseFromIdAsync(id);
-                    var workWidget = new WorkWidget(work.ToWorkMeta());
+                    var workComponent = new WorkComponent(work.ToWorkMeta());
 
-                    AnsiConsole.Write(workWidget.Render());
+                    AnsiConsole.Write(workComponent.Render());
                 } catch (Exception e)
                 {
                     AnsiConsole.WriteException(e);

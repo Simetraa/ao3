@@ -174,13 +174,13 @@ namespace ao3.client.commands.search
 
                     foreach (var work in works)
                     {
-                        var workWidget = new WorkWidget(work);
+                        var workComponent = new WorkComponent(work);
 
 
-                        AnsiConsole.Write(workWidget.Render());
+                        AnsiConsole.Write(workComponent.Render());
                     }
 
-                    AnsiConsole.Write(new PageWidget<WorkMeta>(page, pageCount, workCount, works, workQueryUrl).Render());
+                    AnsiConsole.Write(new PageComponent<WorkMeta>(page, pageCount, workCount, works, workQueryUrl).Render());
                 }
                 catch (Exception e)
                 {
